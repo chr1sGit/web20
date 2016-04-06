@@ -30,6 +30,14 @@ class Task(models.Model):
     description = models.TextField()
     assignedUser = models.ForeignKey(User, related_name='tasks', verbose_name='User')
 
-class Idea(models.Model):
-    text = models.TextField()
+class inProjectIdea(models.Model):
+    project = models.ForeignKey(Project)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
     votes = models.IntegerField()
+
+class generalIdea(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    votes = models.IntegerField()
+
