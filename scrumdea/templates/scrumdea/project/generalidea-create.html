@@ -1,8 +1,8 @@
 {% extends "scrumdea/base.html" %}
 
 {% block content %}
-    <h2>Create Project</h2>
-    <form action="save/" method="post" class="form-horizontal">
+    <h2>New Idea</h2>
+    <form action="" method="post" class="form-horizontal">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Submit</button>

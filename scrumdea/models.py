@@ -9,6 +9,7 @@ class Project(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     creation_date = timezone.now()
+    complete = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description
@@ -42,3 +43,4 @@ class GeneralIdea(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     votes = models.IntegerField()
+    transfered_to_project = models.BooleanField(default=False)

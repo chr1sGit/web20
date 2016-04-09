@@ -1,0 +1,11 @@
+{% extends "scrumdea/base.html" %}
+
+{% block content %}
+    <h2>Detailview</h2>
+
+        <h3>ID: {{ instance.id }}</h3>
+        <strong>Title: </strong>{{ instance.title }}<br/>
+        <strong>Description: </strong>{{ instance.description }}<br/>
+        <strong>Votes: </strong>{{ instance.votes }}<br/>
+
+{% endblock %}

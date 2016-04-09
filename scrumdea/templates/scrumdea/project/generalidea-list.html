@@ -1,0 +1,16 @@
+{% extends "scrumdea/base.html" %}
+
+{% block content %}
+    <h2>General ideas</h2>
+    <a href="{% url "creategeneralidea" %}"> <button type="button" class="btn btn-success">Create new general idea</button></a>
+    <p> <br> {{ title }}</p>
+    {% for idea in idea_list %}
+
+        <h3>ID: {{ idea.id }}</h3>
+        <strong>Title: </strong>{{ idea.title }}<br/>
+        <strong>Description: </strong>{{ idea.description }}<br/>
+        <strong>Votes: </strong>{{ idea.votes }}<br/>
+        <a href="{% url "generalideadetailview" pk=idea.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
+
+    {% endfor %}
+{% endblock %}
