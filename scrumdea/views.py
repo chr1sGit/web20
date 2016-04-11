@@ -49,13 +49,14 @@ def create_general_idea(request):
             instance = form.save(commit=False)
             instance.votes = 0
             instance.save()
-            #success
+            # success
             messages.success(request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
             return HttpResponseRedirect('/general-ideas/' + str(instance.id))
         else:
-            messages.error(request, "<b>Oh Snap!</b> Something went wrong. Check your input.", extra_tags='alert alert-danger safe')
+            messages.error(request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                           extra_tags='alert alert-danger safe')
     context = {
-        "form" : form,
+        "form": form,
 
     }
     return render(request, "scrumdea/project/generalidea-create.html", context)
@@ -70,11 +71,12 @@ def edit_general_idea(request, pk=None):
                 instance = form.save(commit=False)
                 instance.votes = 0
                 instance.save()
-                #success
+                # success
                 messages.success(request, "<b>Saved!</b> Idea updated.", extra_tags='alert alert-success safe')
                 return HttpResponseRedirect('/general-ideas/' + str(instance.id))
             else:
-                messages.error(request, "<b>Whoops!</b> Pleas fill in the required fields.", extra_tags='alert alert-danger safe')
+                messages.error(request, "<b>Whoops!</b> Pleas fill in the required fields.",
+                               extra_tags='alert alert-danger safe')
         context = {
             "title": "authenticated User response",
             "instance": instance,
@@ -101,9 +103,17 @@ class ProjectList(View):
     def get(self, request):
         projects = src_models.Project.objects.all()
         context = {
-            "projects" : projects
+            "projects": projects
         }
         return render(request, "scrumdea/project/project-list.html", context)
+
+
+class ProjectUpdate(View):
+    def get(self, request):
+        return
+
+    def post(self, request):
+        return
 
 
 class Index(FormView):
