@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -10,7 +10,7 @@ from scrumdea import models as src_models
 from scrumdea import forms as src_forms
 
 
-# Create your views here.
+# General Idea Views
 
 def idea_list(request):
     if request.user.is_authenticated():
@@ -65,13 +65,16 @@ def edit_general_idea(request, pk=None):
     if request.user.is_authenticated():
         instance = get_object_or_404(src_models.GeneralIdea, id=pk)
         form = src_forms.GeneralIdeaForm(request.POST or None, instance=instance)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.votes = 0
-            instance.save()
-            #success
-            messages.success(request, "<b>Saved!</b> Idea updated.", extra_tags='alert alert-success safe')
-            return HttpResponseRedirect('/general-ideas/' + str(instance.id))
+        if request.method == "POST":
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.votes = 0
+                instance.save()
+                #success
+                messages.success(request, "<b>Saved!</b> Idea updated.", extra_tags='alert alert-success safe')
+                return HttpResponseRedirect('/general-ideas/' + str(instance.id))
+            else:
+                messages.error(request, "<b>Whoops!</b> Pleas fill in the required fields.", extra_tags='alert alert-danger safe')
         context = {
             "title": "authenticated User response",
             "instance": instance,
@@ -91,6 +94,16 @@ def delete_general_idea(request, pk):
     instance.delete()
     messages.success(request, "<b>Deleted!</b> Idea removed.", extra_tags='alert alert-warning safe')
     return HttpResponseRedirect('/')
+
+
+# Project Views
+class ProjectList(View):
+    def get(self, request):
+        projects = src_models.Project.objects.all()
+        context = {
+            "projects" : projects
+        }
+        return render(request, "scrumdea/project/project-list.html", context)
 
 
 class Index(FormView):

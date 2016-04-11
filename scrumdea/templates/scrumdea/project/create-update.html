@@ -1,6 +1,11 @@
 {% extends "scrumdea/base.html" %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}</div>
+        {% endfor %}
+    {% endif %}
     <h2>Create Project</h2>
     <form action="save/" method="post" class="form-horizontal">
     {% csrf_token %}

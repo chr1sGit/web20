@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^general-ideas/create/$', views.create_general_idea, name='creategeneralidea'),
     url(r'^general-ideas/(?P<pk>\d+)/edit$', views.edit_general_idea, name='general_idea_edit_view'),
     url(r'^general-ideas/(?P<pk>\d+)/delete$', views.delete_general_idea, name='general_idea_delete_view'),
+    url(r'^projects/$', views.ProjectList.as_view(), name='project_list'),
+
 
 
     url(r'^(?P<project_id>[0-9]+)/$', views.project, name='project'),
