@@ -3,11 +3,14 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    # General idea
     url(r'^$', views.idea_list, name='idea_list'),
-    url(r'^general-ideas/(?P<pk>\d+)/$', views.generalidea_detail_view, name='generalideadetailview'),
-    url(r'^general-ideas/create/$', views.create_general_idea, name='creategeneralidea'),
+    url(r'^general-ideas/(?P<pk>\d+)/$', views.generalidea_detail_view, name='general_idea_detail_view'),
+    url(r'^general-ideas/create/$', views.create_general_idea, name='create_general_idea'),
     url(r'^general-ideas/(?P<pk>\d+)/edit$', views.edit_general_idea, name='general_idea_edit_view'),
     url(r'^general-ideas/(?P<pk>\d+)/delete$', views.delete_general_idea, name='general_idea_delete_view'),
+
+    # Project
     url(r'^projects/$', views.ProjectList.as_view(), name='project_list'),
 
 

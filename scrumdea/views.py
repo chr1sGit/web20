@@ -109,7 +109,9 @@ class ProjectList(View):
 
 
 class ProjectUpdate(View):
+    form = src_forms.ProjectForm()
     def get(self, request):
+
         return
 
     def post(self, request):

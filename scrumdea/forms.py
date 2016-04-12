@@ -14,3 +14,4 @@ class GeneralIdeaForm(forms.ModelForm):
     class Meta:
         model = scr_models.GeneralIdea
         fields = ('title', 'description')
+
