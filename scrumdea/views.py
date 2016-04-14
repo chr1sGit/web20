@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView
 from django.shortcuts import render, get_object_or_404, render_to_response
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpRequest
 from django.contrib import messages
 from django.template import RequestContext
+from django.core.urlresolvers import reverse_lazy, reverse
 
 from scrumdea import models as src_models
 from scrumdea import forms as src_forms
@@ -22,53 +23,52 @@ class GeneralIdeaDetailView(DetailView):
     template_name = "scrumdea/general-idea/generalidea-detail.html"
 
 
-def create_general_idea(request):
-    form = src_forms.GeneralIdeaForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.votes = 0
-            instance.save()
-            # success
-            messages.success(request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
-            return HttpResponseRedirect('/general-ideas/' + str(instance.id))
-        else:
-            messages.error(request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
-                           extra_tags='alert alert-danger safe')
-    context = {
-        "form": form,
+class GeneralIdeaCreateView(CreateView):
+    model = src_models.GeneralIdea
+    fields = ['title', 'description']
+    template_name = "scrumdea/general-idea/generalidea-create.html"
 
-    }
-    return render(request, "scrumdea/general-idea/generalidea-create.html", context)
+    def get_success_url(self):
+        return reverse('general_idea_detail_view', args=(self.object.id,))
+
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
 
 
-def edit_general_idea(request, pk=None):
-    if request.user.is_authenticated():
-        instance = get_object_or_404(src_models.GeneralIdea, id=pk)
-        form = src_forms.GeneralIdeaForm(request.POST or None, instance=instance)
-        if request.method == "POST":
-            if form.is_valid():
-                instance = form.save(commit=False)
-                instance.votes = 0
-                instance.save()
-                # success
-                messages.success(request, "<b>Saved!</b> Idea updated.", extra_tags='alert alert-success safe')
-                return HttpResponseRedirect('/general-ideas/' + str(instance.id))
-            else:
-                messages.error(request, "<b>Whoops!</b> Pleas fill in the required fields.",
-                               extra_tags='alert alert-danger safe')
-        context = {
-            "title": "authenticated User response",
-            "instance": instance,
-            "form": form,
-        }
+class GeneralIdeaUpdateView(UpdateView):
+    model = src_models.GeneralIdea
+    fields = ['title', 'description']
+    template_name = "scrumdea/general-idea/generalidea-update.html"
 
-    else:
-        context = {
-            "title": "access denied (not authenticated)"
-        }
+    def get_success_url(self):
+        return reverse('general_idea_detail_view', args=(self.object.id,))
 
-    return render(request, "scrumdea/general-idea/generalidea-update.html", context)
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> Idea updated! :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
+
+
+class GeneralIdeaDeleteView(DeleteView):
+    model = src_models.GeneralIdea
+    template_name = "scrumdea/general-idea/generalidea-delete.html"
+
+    def get_success_url(self):
+        return reverse('general_idea_list_view')
 
 
 def delete_general_idea(request, pk):
