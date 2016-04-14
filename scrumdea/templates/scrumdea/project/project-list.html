@@ -9,13 +9,13 @@
     <h2>Projekte</h2>
     <a href=""> <button type="button" class="btn btn-success">Create new project</button></a>
     <p> <br></p>
-    {% for project in projects %}
+    {% for project in object_list %}
 
         <h3><strong>{{ project.name }} </strong></h3>
         <strong>ID:</strong> {{ project.id }}<br/>
         <stron>Creation date:</stron> {{ project.creation_date }}<br/>
         <strong>Description: </strong>{{ project.description }}<br/>
-        <a href=""> <button type="button" class="btn btn-primary">Details</button></a>
+        <a href="{% url 'project_detail_view' pk=project.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
 
     {% endfor %}
 {% endblock %}

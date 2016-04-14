@@ -7,15 +7,16 @@
         {% endfor %}
     {% endif %}
     <h2>General ideas</h2>
-    <a href="{% url "creategeneralidea" %}"> <button type="button" class="btn btn-success">Create new general idea</button></a>
+    <a href="{% url "create_general_idea_view" %}"> <button type="button" class="btn btn-success">Create new general idea</button></a>
+    <a href="{% url "project_create_view" %}"> <button type="button" class="btn btn-success">Create project</button></a>
     <p> <br> {{ title }}</p>
-    {% for idea in idea_list %}
+    {% for idea in object_list %}
 
         <h3><strong>{{ idea.title }} </strong></h3>
         <strong>ID:</strong> {{ idea.id }}<br/>
         <strong>Description: </strong>{{ idea.description }}<br/>
         <strong>Votes: </strong>{{ idea.votes }}<br/>
-        <a href="{% url "generalideadetailview" pk=idea.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
+        <a href="{% url "general_idea_detail_view" pk=idea.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
 
     {% endfor %}
 {% endblock %}

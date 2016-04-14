@@ -1,45 +1,25 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.template import RequestContext
 
 from scrumdea import models as src_models
 from scrumdea import forms as src_forms
 
 
 # General Idea Views
-
-def idea_list(request):
-    if request.user.is_authenticated():
-        queryset = src_models.GeneralIdea.objects.all()
-        context = {
-            "title": "authenticated User response",
-            "idea_list": queryset
-        }
-    else:
-        context = {
-            "title": "access denied"
-        }
-
-    return render(request, "scrumdea/project/generalidea-list.html", context)
+class GeneralIdeaListView(ListView):
+    model = src_models.GeneralIdea
+    template_name = "scrumdea/general-idea/generalidea-list.html"
 
 
-def generalidea_detail_view(request, pk):
-    if request.user.is_authenticated():
-        instance = get_object_or_404(src_models.GeneralIdea, id=pk)
-        context = {
-            "title": "authenticated User response",
-            "instance": instance
-        }
-    else:
-        context = {
-            "title": "access denied (not authenticated)"
-        }
-
-    return render(request, "scrumdea/project/generalidea-detail.html", context)
+class GeneralIdeaDetailView(DetailView):
+    model = src_models.GeneralIdea
+    template_name = "scrumdea/general-idea/generalidea-detail.html"
 
 
 def create_general_idea(request):
@@ -59,7 +39,7 @@ def create_general_idea(request):
         "form": form,
 
     }
-    return render(request, "scrumdea/project/generalidea-create.html", context)
+    return render(request, "scrumdea/general-idea/generalidea-create.html", context)
 
 
 def edit_general_idea(request, pk=None):
@@ -88,7 +68,7 @@ def edit_general_idea(request, pk=None):
             "title": "access denied (not authenticated)"
         }
 
-    return render(request, "scrumdea/project/generalidea-update.html", context)
+    return render(request, "scrumdea/general-idea/generalidea-update.html", context)
 
 
 def delete_general_idea(request, pk):
@@ -99,23 +79,54 @@ def delete_general_idea(request, pk):
 
 
 # Project Views
-class ProjectList(View):
+class ProjectNewListView(ListView):
+    model = src_models.Project
+    template_name = "scrumdea/project/project-list.html"
+
+
+class ProjectCreateView(View):
     def get(self, request):
-        projects = src_models.Project.objects.all()
-        context = {
-            "projects": projects
-        }
-        return render(request, "scrumdea/project/project-list.html", context)
-
-
-class ProjectUpdate(View):
-    form = src_forms.ProjectForm()
-    def get(self, request):
-
-        return
+        if request.user.is_authenticated():
+            form = src_forms.GeneralIdeaForm()
+            context = {
+                "form": form,
+            }
+            return render(request, "scrumdea/project/project-create-update.html", context)
+        else:
+            return
 
     def post(self, request):
-        return
+        if request.user.is_authenticated():
+            form = src_forms.GeneralIdeaForm(request.POST or None)
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.save()
+                # success
+                messages.success(request, "<b>Success!</b> New Project created :)",
+                                 extra_tags='alert alert-success safe')
+                return HttpResponseRedirect('/projects/' + str(instance.id))
+            else:
+                messages.error(request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                               extra_tags='alert alert-danger safe')
+            context = {
+                "form": form,
+            }
+            return render(request, "scrumdea/project/generalidea-create.html", context)
+        else:
+            messages.error(request, "<b>Not signed in</b> Please authenticate!")
+            return HttpResponseRedirect('/projects/')
+
+
+class ProjectDetailView(DetailView):
+    model = src_models.Project
+    template_name = 'scrumdea/project/project-detail.html'
+
+
+class ProjectCreateView(CreateView):
+    model = src_models.Project
+    template_name = 'scrumdea/project/project-create-update.html'
+    context_object_name = 'project'
+    form_class = src_forms.ProjectForm
 
 
 class Index(FormView):
@@ -145,19 +156,6 @@ def project(request, project_id):
     return HttpResponse(response % project_id)
 
 
-class ProjectDetailView(DetailView):
-    model = src_models.Project
-    template_name = 'scrumdea/project/detail.html'
-    context_object_name = 'project'
-
-
-class ProjectCreateView(CreateView):
-    model = src_models.Project
-    template_name = 'scrumdea/project/create-update.html'
-    context_object_name = 'project'
-    form_class = src_forms.ProjectForm
-
-
 def get_name(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -175,3 +173,9 @@ def get_name(request):
         form = src_forms.ProjectForm()
 
     return render(request, 'name.html', {'form': form})
+
+
+def page_not_found(request):
+    response = render_to_response('scrumdea/404.html', context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
