@@ -71,27 +71,45 @@ class GeneralIdeaDeleteView(DeleteView):
         return reverse('general_idea_list_view')
 
 
-def delete_general_idea(request, pk):
-    instance = get_object_or_404(src_models.GeneralIdea, id=pk)
-    instance.delete()
-    messages.success(request, "<b>Deleted!</b> Idea removed.", extra_tags='alert alert-warning safe')
-    return HttpResponseRedirect('/')
-
-
 # Project Views
 class ProjectNewListView(ListView):
     model = src_models.Project
     template_name = "scrumdea/project/project-list.html"
 
 
-class ProjectCreateView(View):
+class ProjectDetailView(DetailView):
+    model = src_models.Project
+    template_name = 'scrumdea/project/project-detail.html'
+
+
+class ProjectCreateView(CreateView):
+    model = src_models.Project
+    fields = ['name', 'description']
+    template_name = "scrumdea/project/project-create.html"
+
+    def get_success_url(self):
+        return reverse("project_detail_view", args=self.object.id)
+
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> New project created :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
+
+
+class ProjectCreateView2(View):
     def get(self, request):
         if request.user.is_authenticated():
             form = src_forms.GeneralIdeaForm()
             context = {
                 "form": form,
             }
-            return render(request, "scrumdea/project/project-create-update.html", context)
+            return render(request, "scrumdea/project/project-create.html", context)
         else:
             return
 
@@ -117,14 +135,12 @@ class ProjectCreateView(View):
             return HttpResponseRedirect('/projects/')
 
 
-class ProjectDetailView(DetailView):
-    model = src_models.Project
-    template_name = 'scrumdea/project/project-detail.html'
+
 
 
 class ProjectCreateView(CreateView):
     model = src_models.Project
-    template_name = 'scrumdea/project/project-create-update.html'
+    template_name = 'scrumdea/project/project-create.html'
     context_object_name = 'project'
     form_class = src_forms.ProjectForm
 

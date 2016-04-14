@@ -7,7 +7,7 @@
         {% endfor %}
     {% endif %}
     <h2>Projekte</h2>
-    <a href=""> <button type="button" class="btn btn-success">Create new project</button></a>
+    <a href="{% url 'project_create_view' %}"> <button type="button" class="btn btn-success">Create new project</button></a>
     <p> <br></p>
     {% for project in object_list %}
 
