@@ -16,13 +16,13 @@ urlpatterns = [
     url(r'^projects/$', views.ProjectNewListView.as_view(), name='project_list_view'),
     url(r'^projects/create$', views.ProjectCreateView.as_view(), name='project_create_view'),
     url(r'^projects/(?P<pk>\d+)/$', views.ProjectDetailView.as_view(), name='project_detail_view'),
+    url(r'^projects/(?P<pk>\d+)/edit$', views.ProjectEditView.as_view(), name='project_edit_view'),
+    url(r'^projects/(?P<pk>\d+)/delete$', views.ProjectDeleteView.as_view(), name='project_delete_view'),
 
-    # old URLs
-    #url(r'^(?P<project_id>[0-9]+)/$', views.project, name='project'),
-    #url(r'^project/view/(?P<pk>\d+)/$', views.ProjectDetailView.as_view(), name='detailProject_view'),
-    #url(r'^project/create/$', views.ProjectCreateView.as_view(), name='createProject_view'),
-    #url(r'^project/create/save/$', views.get_name, name='createProjectSubmit_function_view'),
-
+    # Sprints
+    url(r'^projects/(?P<pk>\d+)/sprints/$', views.SprintListView.as_view(), name='sprint_list_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/create$', views.SprintCreateView.as_view(), name='sprint_create_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/$', views.SprintDetailView.as_view(), name='sprint_detail_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/delete$', views.SprintDeleteView.as_view(),
+        name='sprint_delete_view'),
 ]
-
-handler404 = 'views.page_not_found'

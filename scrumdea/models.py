@@ -15,9 +15,11 @@ class Project(models.Model):
     finishing_date = models.DateTimeField(null=True)
     visible = models.BooleanField(default=True)
 
-
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return u'/projects/%d' % self.id
 
 
 class Sprint(models.Model):

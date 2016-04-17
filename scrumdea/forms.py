@@ -15,3 +15,8 @@ class GeneralIdeaForm(forms.ModelForm):
         model = scr_models.GeneralIdea
         fields = ('title', 'description')
 
+
+class SprintForm(forms.ModelForm):
+    class Meta:
+        model = scr_models.Sprint
+        fields = ('name',)
