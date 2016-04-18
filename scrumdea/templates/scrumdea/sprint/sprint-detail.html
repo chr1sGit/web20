@@ -32,13 +32,13 @@
                 <div class="thumbnail">
                     <div class="caption">
                     <h4>{{ task.name }}</h4>
-                    <p>Description:<br>
+                    <p><strong>Description:</strong><br>
                     {{ task.description }}</p>
 
                     <a href="{% url 'task_edit_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-primary">edit</button></a>
                     <a href="{% url 'task_delete_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-danger">delete</button></a>
 
-                    <p> <br><a href=""> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
+                    <p> <br><a href="{% url 'task_move_right_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
                     </div>
                 </div>
                 {% endfor %}
@@ -56,7 +56,7 @@
                     <a href="{% url 'task_edit_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-primary">edit</button></a>
                     <a href="{% url 'task_delete_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-danger">delete</button></a>
 
-                    <p> <br><a href=""> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
+                    <p> <br><a href="{% url 'task_move_right_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
                     </div>
                  </div>
                 {% endfor %}
@@ -74,7 +74,7 @@
                     <a href="{% url 'task_edit_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-primary">edit</button></a>
                     <a href="{% url 'task_delete_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-danger">delete</button></a>
 
-                    <p> <br><a href=""> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
+                    <p> <br><a href="{% url 'task_move_right_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
                     </div>
                  </div>
                 {% endfor %}
@@ -91,8 +91,6 @@
 
                     <a href="{% url 'task_edit_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-primary">edit</button></a>
                     <a href="{% url 'task_delete_view' pk=project.id spk=sprint.id tpk=task.id %}"> <button type="button" class="btn btn-danger">delete</button></a>
-
-                    <p> <br><a href=""> <button type="button" class="btn btn-success"> move to next phase >>></button></a></p>
                     </div>
                  </div>
                 {% endfor %}

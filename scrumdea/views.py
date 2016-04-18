@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView, RedirectView
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, HttpRequest
 from django.contrib import messages
@@ -328,6 +328,31 @@ class TaskDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
+
+
+class TaskMoveRight(RedirectView):
+    model = src_models.Task
+
+    def get_object(self, queryset=None):
+        return src_models.Task.objects.get(id=self.kwargs['tpk'])
+
+    def new_phase(self, argument):
+        switcher = {
+            'ToDo': 'iP',
+            'iP': 'iR',
+            'iR': 'F',
+        }
+        return switcher.get(argument, "F")
+
+    def get_redirect_url(self, *args, **kwargs):
+
+        task = src_models.Task.objects.get(id=self.kwargs['tpk'])
+        task.phase = self.new_phase(task.phase)
+        task.save()
+
+        return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
+
+
 
 
 # trash

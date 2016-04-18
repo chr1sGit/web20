@@ -38,5 +38,7 @@ urlpatterns = [
         name='task_edit_view'),
     url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/delete$', views.TaskDeleteView.as_view(),
         name='task_delete_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/move-right$', views.TaskMoveRight.as_view(),
+        name='task_move_right_view'),
 
 ]
