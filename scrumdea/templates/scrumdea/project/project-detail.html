@@ -16,4 +16,13 @@
         <a href="{% url "project_delete_view" pk=object.id %}"> <button type="button" class="btn btn-danger">Delete</button></a>
         <a href="{% url "sprint_create_view" pk=object.id %}"> <button type="button" class="btn btn-success">New sprint</button></a>
 
+    <h3>Sprints</h3>
+    <p>&nbsp;</p>
+    {% if sprints %}
+        {% for sprint in sprints %}
+            <h4>{{ sprint.name }}</h4>
+            <p>ID: {{ sprint.id }}</p>
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}

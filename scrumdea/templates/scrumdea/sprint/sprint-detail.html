@@ -10,9 +10,10 @@
 
         <h3><strong>Title: </strong>{{ object.name }}</h3>
         <strong>ID:</strong> {{ object.id }}<br/>
-        display tasks here ;)<br/>
+        <br/>
 
-        <a href=""> <button type="button" class="btn btn-primary">Edit Idea</button></a>
+        <a href="{% url 'sprint_edit_view' pk=object.project.id spk=object.id %}"> <button type="button" class="btn btn-primary">Edit sprint</button></a>
         <a href="{% url 'sprint_delete_view' pk=object.project.id spk=object.id %} "> <button type="button" class="btn btn-danger">Delete</button></a>
 
+        <p> <br>display tasks here ;)</p>
 {% endblock %}

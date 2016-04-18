@@ -9,6 +9,7 @@
     <h2>General ideas</h2>
     <a href="{% url "create_general_idea_view" %}"> <button type="button" class="btn btn-success">Create new general idea</button></a>
     <a href="{% url "project_create_view" %}"> <button type="button" class="btn btn-success">Create project</button></a>
+    <p> <br><a href="{% url "project_list_view" %}"> <button type="button" class="btn btn-warning">View all projects</button></a></p>
     <p> <br> {{ title }}</p>
     {% for idea in object_list %}
 
