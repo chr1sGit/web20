@@ -42,6 +42,9 @@
                     </div>
                 </div>
                 {% endfor %}
+                {% if not tasks_todo %}
+                    <p>no tasks in this phase</p>
+                {% endif %}
             </div>
             <div class="col-md-3">
                 <h2>in progress</h2>
@@ -60,6 +63,9 @@
                     </div>
                  </div>
                 {% endfor %}
+                {% if not tasks_in_progress %}
+                    <p>no tasks in this phase</p>
+                {% endif %}
             </div>
             <div class="col-md-3">
                 <h2>in review</h2>
@@ -78,6 +84,9 @@
                     </div>
                  </div>
                 {% endfor %}
+                {% if not tasks_in_review %}
+                    <p>no tasks in this phase</p>
+                {% endif %}
             </div>
             <div class="col-md-3">
                 <h2>finished</h2>
@@ -94,6 +103,9 @@
                     </div>
                  </div>
                 {% endfor %}
+                {% if not tasks_finished %}
+                    <p>no tasks in this phase</p>
+                {% endif %}
             </div>
         </div>
 {% endblock %}

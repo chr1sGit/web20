@@ -25,4 +25,4 @@ class SprintForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = scr_models.Task
-        fields = ('description','phase', 'assignedUser')
+        fields = ('name', 'description','phase', 'assignedUser')

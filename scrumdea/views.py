@@ -196,8 +196,13 @@ class SprintDetailView(DetailView):
         context['tasks_finished'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F')
         context['project'] = src_models.Project.objects.get(id=self.kwargs['pk'])
         context['sprint'] = src_models.Sprint.objects.get(id=self.kwargs['spk'])
-        percent_complete = round(((src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count() / src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()) * 100), 1)
-        context['sprint_complete_in_percent'] = percent_complete
+        percent_complete = 0
+        tasks_count = src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()
+        tasks_finished = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count()
+        if tasks_count != 0:
+            percent_complete = (tasks_finished / tasks_count) * 100
+        #percent_complete = round(((src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count() / src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()) * 100), 1)
+        context['sprint_complete_in_percent'] = round(percent_complete, 1)
         return context
 
 
