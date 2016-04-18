@@ -7,14 +7,15 @@
         {% endfor %}
     {% endif %}
     <h2>Tasks</h2>
+    <p><strong>Sprint:</strong> {{ sprint.name }}</p>
     <a href="{% url 'task_create_view' pk=project.id spk=sprint.id %}"> <button type="button" class="btn btn-success">Add task</button></a>
     <p> <br></p>
-    {% for sprint in object_list %}
+    {% for task in object_list %}
 
-        <h3><strong>{{ sprint.name }} </strong></h3>
-        <strong>ID:</strong> {{ sprint.id }}<br/>
-        <stron>Creation date:</stron> {{ sprint.creation_date }}<br/>
-        <a href="{% url 'sprint_detail_view' pk=project.id spk=sprint.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
+        <h3><strong>{{ task.name }} </strong></h3>
+        <strong>ID:</strong> {{ task.id }}<br/>
+        <stron>Creation date:</stron> {{ task.creation_date }}<br/>
+        <a href="{% url 'task_detail_view' pk=project.id spk=task.sprint.id tpk=task.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
 
     {% endfor %}
 {% endblock %}

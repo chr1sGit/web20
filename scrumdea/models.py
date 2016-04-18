@@ -3,9 +3,9 @@ from django.db import models
 from django.utils import timezone
 
 
-#class UserProfile(models.Model):
+# class UserProfile(models.Model):
 #    user = models.OneToOneField(User)
-    # not finished yet (needed to
+# not finished yet (needed to
 
 
 class Project(models.Model):
@@ -38,6 +38,10 @@ class Task(models.Model):
         ('iR', 'in Review'),
         ('F', 'Finished'),
     )
+    phase = models.CharField(max_length=4,
+                             choices=PHASE,
+                             default='ToDo')
+    name = models.CharField(max_length=300, default='no name')
     description = models.TextField()
     assignedUser = models.ForeignKey(User, related_name='tasks', verbose_name='User')
 

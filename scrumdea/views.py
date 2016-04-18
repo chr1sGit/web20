@@ -164,7 +164,7 @@ class SprintCreateView(CreateView):
     form_class = src_forms.SprintForm
 
     def get_success_url(self):
-        return reverse('sprint_list_view', args=(self.kwargs['pk']))
+        return reverse('sprint_list_view', kwargs={'pk': self.kwargs['pk']})
 
     def form_valid(self, form):
         messages.success(self.request, "<b>Success!</b> Sprint created! :)", extra_tags='alert alert-success safe')
@@ -186,6 +186,20 @@ class SprintDetailView(DetailView):
     def get_object(self, queryset=None):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(SprintDetailView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['tasks_todo'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='ToDo')
+        context['tasks_in_progress'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iP')
+        context['tasks_in_review'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iR')
+        context['tasks_finished'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F')
+        context['project'] = src_models.Project.objects.get(id=self.kwargs['pk'])
+        context['sprint'] = src_models.Sprint.objects.get(id=self.kwargs['spk'])
+        percent_complete = round(((src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count() / src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()) * 100), 1)
+        context['sprint_complete_in_percent'] = percent_complete
+        return context
+
 
 class SprintDeleteView(DeleteView):
     model = src_models.Sprint
@@ -202,15 +216,16 @@ class SprintDeleteView(DeleteView):
 class SprintEditView(UpdateView):
     model = src_models.Sprint
     fields = ['name', ]
-    template_name = "scrumdea/sprint/sprint-update.html"
+    template_name = "scrumdea/sprint/task-update.html"
 
     def get_object(self, queryset=None):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
 
     def get_success_url(self):
         return reverse('sprint_detail_view',
-                       kwargs={'pk': (src_models.Sprint.objects.get(id=self.kwargs['spk'])).project.id,
-                               'spk': (src_models.Sprint.objects.get(id=self.kwargs['spk'])).id})
+                       kwargs={'pk': self.kwargs['pk'],
+                               'spk': self.kwargs['spk']
+                               })
 
     def form_valid(self, form):
         messages.success(self.request, "<b>Success!</b> Sprint updated! :)", extra_tags='alert alert-success safe')
@@ -248,12 +263,11 @@ class TaskCreateView(CreateView):
     form_class = src_forms.TaskForm
 
     def get_success_url(self):
-        return reverse('task_list_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
+        return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
 
     def form_valid(self, form):
         messages.success(self.request, "<b>Success!</b> Task created! :)", extra_tags='alert alert-success safe')
         self.object = form.save(commit=False)
-        self.object.PHASE = 'To Do'
         self.object.sprint = src_models.Sprint.objects.get(id=self.kwargs['spk'])
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -262,6 +276,58 @@ class TaskCreateView(CreateView):
         messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
                        extra_tags='alert alert-danger safe')
         return self.render_to_response(self.get_context_data())
+
+
+class TaskDetailView(DetailView):
+    model = src_models.Task
+    template_name = 'scrumdea/task/task-detail.html'
+
+    def get_object(self, queryset=None):
+        return src_models.Task.objects.get(id=self.kwargs['tpk'])
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(TaskDetailView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['project'] = src_models.Project.objects.get(id=self.kwargs['pk'])
+        return context
+
+
+class TaskEditView(UpdateView):
+    model = src_models.Task
+    form_class = src_forms.TaskForm
+    template_name = "scrumdea/task/task-update.html"
+
+    def get_object(self, queryset=None):
+        return src_models.Task.objects.get(id=self.kwargs['tpk'])
+
+    def get_success_url(self):
+        return reverse('sprint_detail_view',
+                       kwargs={'pk': self.kwargs['pk'],
+                               'spk': self.kwargs['spk']
+                               })
+
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> Task updated! :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
+
+
+class TaskDeleteView(DeleteView):
+    model = src_models.Task
+    template_name = "scrumdea/task/task-delete.html"
+
+    def get_object(self, queryset=None):
+        return src_models.Task.objects.get(id=self.kwargs['tpk'])
+
+    def get_success_url(self):
+        return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
 
 
 # trash

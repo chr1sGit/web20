@@ -32,5 +32,11 @@ urlpatterns = [
     url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/$', views.TaskListView.as_view(), name='task_list_view'),
     url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/create$', views.TaskCreateView.as_view(),
         name='task_create_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/$', views.TaskDetailView.as_view(),
+        name='task_detail_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/edit$', views.TaskEditView.as_view(),
+        name='task_edit_view'),
+    url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/delete$', views.TaskDeleteView.as_view(),
+        name='task_delete_view'),
 
 ]
