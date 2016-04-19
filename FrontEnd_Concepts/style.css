@@ -7,10 +7,20 @@
 	margin:0;
 }
 
-html{  background-color: #eaf0f2;  }
+html{  background-color: #eaf0f2; height: 100%; }
 
 body{  font:14px/1.5 Arial, Helvetica, sans-serif;
 }
+
+/* Buttons in Lists */
+
+.button-pos-right {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+/* Headers */
 
 header{
 	text-align: center;
@@ -86,11 +96,11 @@ header ul li{
 }
 
 
-/* In our demo, the footers are fixed to the bottom of the page */
+/* Footer */
 
 footer{
-	position: fixed;
-	bottom: 0;
+	/*position: fixed;
+	bottom: 0;*/
 }
 
 @media (max-height:800px){
