@@ -41,4 +41,8 @@ urlpatterns = [
     url(r'^projects/(?P<pk>\d+)/sprints/(?P<spk>\d+)/tasks/(?P<tpk>\d+)/move-right$', views.TaskMoveRight.as_view(),
         name='task_move_right_view'),
 
+    # Authenication
+    url(r'^accounts/login/$', views.LoginView.as_view(), name='login_view'),
+    url(r'^accounts/logout/$', views.LogoutView.as_view(), name='logout_view'),
+
 ]

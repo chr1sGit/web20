@@ -1,29 +1,38 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout, REDIRECT_FIELD_NAME
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView, RedirectView
-from django.shortcuts import render, get_object_or_404, render_to_response
+from django.shortcuts import render, get_object_or_404, render_to_response, resolve_url, redirect
 from django.http import HttpResponseRedirect, HttpRequest
 from django.contrib import messages
 from django.template import RequestContext
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from urllib import parse as urlparse
+from django.conf import settings
+from django.views.generic.base import TemplateResponseMixin
+from django.contrib import auth
+from scrumdea.utils import default_redirect
 
 from scrumdea import models as src_models
 from scrumdea import forms as src_forms
 
 
 # General Idea Views
-class GeneralIdeaListView(ListView):
+class GeneralIdeaListView(LoginRequiredMixin, ListView):
     model = src_models.GeneralIdea
     template_name = "scrumdea/general-idea/generalidea-list.html"
 
 
-class GeneralIdeaDetailView(DetailView):
+class GeneralIdeaDetailView(LoginRequiredMixin, DetailView):
     model = src_models.GeneralIdea
     template_name = "scrumdea/general-idea/generalidea-detail.html"
 
 
-class GeneralIdeaCreateView(CreateView):
+class GeneralIdeaCreateView(LoginRequiredMixin, CreateView):
     model = src_models.GeneralIdea
     fields = ['title', 'description']
     template_name = "scrumdea/general-idea/generalidea-create.html"
@@ -43,10 +52,10 @@ class GeneralIdeaCreateView(CreateView):
         return self.render_to_response(self.get_context_data())
 
 
-class GeneralIdeaUpdateView(UpdateView):
+class GeneralIdeaUpdateView(LoginRequiredMixin, UpdateView):
     model = src_models.GeneralIdea
     fields = ['title', 'description']
-    template_name = "scrumdea/general-idea/generalidea-update.html"
+    template_name = "scrumdea/general-idea/login.html"
 
     def get_success_url(self):
         return reverse('general_idea_detail_view', args=(self.object.id,))
@@ -63,7 +72,7 @@ class GeneralIdeaUpdateView(UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class GeneralIdeaDeleteView(DeleteView):
+class GeneralIdeaDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.GeneralIdea
     template_name = "scrumdea/general-idea/generalidea-delete.html"
 
@@ -72,12 +81,12 @@ class GeneralIdeaDeleteView(DeleteView):
 
 
 # Project Views
-class ProjectNewListView(ListView):
+class ProjectNewListView(LoginRequiredMixin, ListView):
     model = src_models.Project
     template_name = "scrumdea/project/project-list.html"
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Project
     template_name = 'scrumdea/project/project-detail.html'
 
@@ -89,7 +98,7 @@ class ProjectDetailView(DetailView):
         return context
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Project
     fields = ['name', 'description']
     template_name = "scrumdea/project/project-create.html"
@@ -106,7 +115,7 @@ class ProjectCreateView(CreateView):
         return self.render_to_response(self.get_context_data())
 
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Project
     template_name = "scrumdea/project/project-delete.html"
 
@@ -114,7 +123,7 @@ class ProjectDeleteView(DeleteView):
         return reverse('project_list_view')
 
 
-class ProjectEditView(UpdateView):
+class ProjectEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Project
     fields = ['name', 'description']
     template_name = "scrumdea/project/project-update.html"
@@ -134,7 +143,7 @@ class ProjectEditView(UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Project
     template_name = 'scrumdea/project/project-create.html'
     context_object_name = 'project'
@@ -142,7 +151,7 @@ class ProjectCreateView(CreateView):
 
 
 # sprint views
-class SprintListView(ListView):
+class SprintListView(LoginRequiredMixin, ListView):
     model = src_models.Sprint
     template_name = "scrumdea/sprint/sprint-list.html"
 
@@ -157,7 +166,7 @@ class SprintListView(ListView):
         return context
 
 
-class SprintCreateView(CreateView):
+class SprintCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Sprint
     template_name = 'scrumdea/sprint/sprint-create.html'
     context_object_name = 'sprint'
@@ -179,7 +188,7 @@ class SprintCreateView(CreateView):
         return self.render_to_response(self.get_context_data())
 
 
-class SprintDetailView(DetailView):
+class SprintDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Sprint
     template_name = 'scrumdea/sprint/sprint-detail.html'
 
@@ -206,7 +215,7 @@ class SprintDetailView(DetailView):
         return context
 
 
-class SprintDeleteView(DeleteView):
+class SprintDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Sprint
     template_name = "scrumdea/sprint/sprint-delete.html"
 
@@ -218,7 +227,7 @@ class SprintDeleteView(DeleteView):
                        kwargs={'pk': (src_models.Sprint.objects.get(id=self.kwargs['spk'])).project.id})
 
 
-class SprintEditView(UpdateView):
+class SprintEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Sprint
     fields = ['name', ]
     template_name = "scrumdea/sprint/task-update.html"
@@ -245,7 +254,7 @@ class SprintEditView(UpdateView):
 
 
 # task view
-class TaskListView(ListView):
+class TaskListView(LoginRequiredMixin, ListView):
     model = src_models.Task
     template_name = "scrumdea/task/task-list.html"
 
@@ -261,7 +270,7 @@ class TaskListView(ListView):
         return context
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Task
     template_name = 'scrumdea/task/task-create.html'
     context_object_name = 'task'
@@ -283,7 +292,7 @@ class TaskCreateView(CreateView):
         return self.render_to_response(self.get_context_data())
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Task
     template_name = 'scrumdea/task/task-detail.html'
 
@@ -298,7 +307,7 @@ class TaskDetailView(DetailView):
         return context
 
 
-class TaskEditView(UpdateView):
+class TaskEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Task
     form_class = src_forms.TaskForm
     template_name = "scrumdea/task/task-update.html"
@@ -324,7 +333,7 @@ class TaskEditView(UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Task
     template_name = "scrumdea/task/task-delete.html"
 
@@ -335,7 +344,7 @@ class TaskDeleteView(DeleteView):
         return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
 
 
-class TaskMoveRight(RedirectView):
+class TaskMoveRight(LoginRequiredMixin, RedirectView):
     model = src_models.Task
 
     def get_object(self, queryset=None):
@@ -358,12 +367,110 @@ class TaskMoveRight(RedirectView):
         return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': self.kwargs['spk']})
 
 
+# authentication
+
+class LoginView(FormView):
+    form_class = AuthenticationForm
+    redirect_field_name = REDIRECT_FIELD_NAME
+    template_name = 'scrumdea/authentication/login.html'
+
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        """
+        The user has provided valid credentials (this was checked in AuthenticationForm.is_valid()). So now we
+        can check the test cookie stuff and log him in.
+        """
+        self.check_and_delete_test_cookie()
+        login(self.request, form.get_user())
+        return super(LoginView, self).form_valid(form)
+
+    def form_invalid(self, form):
+        """
+        The user has provided invalid credentials (this was checked in AuthenticationForm.is_valid()). So now we
+        set the test cookie again and re-render the form with errors.
+        """
+        self.set_test_cookie()
+        return super(LoginView, self).form_invalid(form)
+
+    def get_success_url(self):
+        if self.success_url:
+            redirect_to = self.success_url
+        else:
+            redirect_to = self.request.POST.get(
+                self.redirect_field_name,
+                self.request.GET.get(self.redirect_field_name, ''))
+
+        netloc = urlparse.urlparse(redirect_to)[1]
+        if not redirect_to:
+            redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+        # Security check -- don't allow redirection to a different host.
+        elif netloc and netloc != self.request.get_host():
+            redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+        return redirect_to
+
+    def set_test_cookie(self):
+        self.request.session.set_test_cookie()
+
+    def check_and_delete_test_cookie(self):
+        if self.request.session.test_cookie_worked():
+            self.request.session.delete_test_cookie()
+            return True
+        return False
+
+    def get(self, request, *args, **kwargs):
+        """
+        Same as django.views.generic.edit.ProcessFormView.get(), but adds test cookie stuff
+        """
+        self.set_test_cookie()
+        return super(LoginView, self).get(request, *args, **kwargs)
+
+
+class LogoutView(TemplateResponseMixin, View):
+    template_name = "scrumdea/authentication/logout.html"
+    redirect_field_name = "next"
+
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_authenticated():
+            return redirect(self.get_redirect_url())
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_authenticated():
+            auth.logout(self.request)
+        return redirect(self.get_redirect_url())
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        redirect_field_name = self.get_redirect_field_name()
+        redirect_field_value = self.request.POST.get(
+            redirect_field_name, self.request.GET.get(redirect_field_name, ''))
+        context.update({
+            "redirect_field_name": redirect_field_name,
+            "redirect_field_value": redirect_field_value,
+            })
+        return context
+
+    def get_redirect_field_name(self):
+        return self.redirect_field_name
+
+    def get_redirect_url(self, fallback_url=None, **kwargs):
+        if fallback_url is None:
+            fallback_url = settings.LOGIN_URL
+        kwargs.setdefault("redirect_field_name", self.get_redirect_field_name())
+        return default_redirect(self.request, fallback_url, **kwargs)
+
 
 
 # trash
 class Index(FormView):
     template_name = "scrumdea/project/login.html"
     form_class = AuthenticationForm
+
 
 
 def sign_in_user(request):
