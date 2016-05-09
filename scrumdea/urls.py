@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^general-ideas/create/$', views.GeneralIdeaCreateView.as_view(), name='create_general_idea_view'),
     url(r'^general-ideas/(?P<pk>\d+)/edit$', views.GeneralIdeaUpdateView.as_view(), name='general_idea_edit_view'),
     url(r'^general-ideas/(?P<pk>\d+)/delete$', views.GeneralIdeaDeleteView.as_view(), name='general_idea_delete_view'),
+    url(r'^general-ideas/(?P<pk>\d+)/vote$', views.VoteView.as_view(), name='general_idea_vote_view'),
 
     # Projects
     url(r'^projects/$', views.ProjectNewListView.as_view(), name='project_list_view'),

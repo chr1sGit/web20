@@ -61,3 +61,12 @@ class GeneralIdea(models.Model):
     creation_date = timezone.now()
     votes = models.IntegerField(default=0)
     transfered_to_project = models.BooleanField(default=False)
+
+
+class Vote(models.Model):
+    class Meta:
+        unique_together = (('user', 'generalIdea', 'inProjectIdea'),)
+
+    user = models.ForeignKey(User)
+    generalIdea = models.ForeignKey(GeneralIdea, null=True, default=None)
+    inProjectIdea = models.ForeignKey(InProjectIdea, null=True, default=None)

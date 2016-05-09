@@ -4,7 +4,8 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView, RedirectView
+from django.views.generic import TemplateView, DetailView, CreateView, UpdateView, FormView, View, ListView, DeleteView, \
+    RedirectView
 from django.shortcuts import render, get_object_or_404, render_to_response, resolve_url, redirect
 from django.http import HttpResponseRedirect, HttpRequest
 from django.contrib import messages
@@ -196,9 +197,7 @@ class SprintDetailView(LoginRequiredMixin, DetailView):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super(SprintDetailView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         context['tasks_todo'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='ToDo')
         context['tasks_in_progress'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iP')
         context['tasks_in_review'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iR')
@@ -210,7 +209,6 @@ class SprintDetailView(LoginRequiredMixin, DetailView):
         tasks_finished = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count()
         if tasks_count != 0:
             percent_complete = (tasks_finished / tasks_count) * 100
-        #percent_complete = round(((src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count() / src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()) * 100), 1)
         context['sprint_complete_in_percent'] = round(percent_complete, 1)
         return context
 
@@ -359,7 +357,6 @@ class TaskMoveRight(LoginRequiredMixin, RedirectView):
         return switcher.get(argument, "F")
 
     def get_redirect_url(self, *args, **kwargs):
-
         task = src_models.Task.objects.get(id=self.kwargs['tpk'])
         task.phase = self.new_phase(task.phase)
         task.save()
@@ -452,7 +449,7 @@ class LogoutView(TemplateResponseMixin, View):
         context.update({
             "redirect_field_name": redirect_field_name,
             "redirect_field_value": redirect_field_value,
-            })
+        })
         return context
 
     def get_redirect_field_name(self):
@@ -465,12 +462,40 @@ class LogoutView(TemplateResponseMixin, View):
         return default_redirect(self.request, fallback_url, **kwargs)
 
 
+# vote view
+class VoteView(View):
+    def post(self, request, *args, **kwargs):
+        # - retrieve the user_profile
+        # - retrieve the suggestedName he voted for
+        # - query the votes to see if this combination of user_profile + suggestedName already exists
+
+
+        user = self.request.user
+        generalIdea = None
+        inProjectIdea = None
+
+        vote, created = src_models.Vote.objects.get_or_create(
+            user=user,
+            generalIdea=generalIdea,
+            inProjectIdea=inProjectIdea
+        )
+
+        # get_or_create will return a tuple
+        # where created is True if the method created the Vote
+        # False if there was a vote for this user and this name already
+        # You now want to use the value from 'created'
+        # to decide wether the vote is valid or not
+
+        if not created:
+            return HttpResponse('You already voted for this.')
+        else:
+            return HttpResponse('Awesome, thanks for voting!')
+
 
 # trash
 class Index(FormView):
     template_name = "scrumdea/project/login.html"
     form_class = AuthenticationForm
-
 
 
 def sign_in_user(request):
