@@ -27,10 +27,21 @@ class GeneralIdeaListView(LoginRequiredMixin, ListView):
     model = src_models.GeneralIdea
     template_name = "scrumdea/general-idea/generalidea-list.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        update_vote_count_general_idea()
+        return super(GeneralIdeaListView, self).dispatch(request, *args, **kwargs)
+
 
 class GeneralIdeaDetailView(LoginRequiredMixin, DetailView):
     model = src_models.GeneralIdea
     template_name = "scrumdea/general-idea/generalidea-detail.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        # called during init of class
+        update_vote_count_general_idea()
+
+        # call the view
+        return super(GeneralIdeaDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class GeneralIdeaCreateView(LoginRequiredMixin, CreateView):
@@ -56,7 +67,7 @@ class GeneralIdeaCreateView(LoginRequiredMixin, CreateView):
 class GeneralIdeaUpdateView(LoginRequiredMixin, UpdateView):
     model = src_models.GeneralIdea
     fields = ['title', 'description']
-    template_name = "scrumdea/general-idea/login.html"
+    template_name = "scrumdea/general-idea/generalidea-update.html"
 
     def get_success_url(self):
         return reverse('general_idea_detail_view', args=(self.object.id,))
@@ -462,83 +473,44 @@ class LogoutView(TemplateResponseMixin, View):
         return default_redirect(self.request, fallback_url, **kwargs)
 
 
-# vote view
-class VoteView(View):
-    def post(self, request, *args, **kwargs):
-        # - retrieve the user_profile
-        # - retrieve the suggestedName he voted for
-        # - query the votes to see if this combination of user_profile + suggestedName already exists
+# vote views
+class VoteViewGeneralIdea(View):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('general_idea_detail_view', kwargs={'pk': self.kwargs['pk']})
 
+    def get(self, request, *args, **kwargs):
 
         user = self.request.user
-        generalIdea = None
-        inProjectIdea = None
+        general_idea = src_models.GeneralIdea.objects.get(id=kwargs["pk"])
+        in_project_idea = None
 
         vote, created = src_models.Vote.objects.get_or_create(
             user=user,
-            generalIdea=generalIdea,
-            inProjectIdea=inProjectIdea
+            generalIdea=general_idea,
+            inProjectIdea=in_project_idea
         )
 
-        # get_or_create will return a tuple
-        # where created is True if the method created the Vote
-        # False if there was a vote for this user and this name already
-        # You now want to use the value from 'created'
-        # to decide wether the vote is valid or not
-
         if not created:
-            return HttpResponse('You already voted for this.')
+            messages.error(self.request, "You have already voted for this Idea. Sorry.",
+                           extra_tags='alert alert-danger safe')
+            return HttpResponseRedirect(self.get_redirect_url())
         else:
-            return HttpResponse('Awesome, thanks for voting!')
+            messages.success(self.request, "Awesome, thanks for voting!",
+                             extra_tags='alert alert-success safe')
+            update_vote_count_general_idea()
+            return HttpResponseRedirect(self.get_redirect_url())
+
+
+# Updates all votes of general ideas
+def update_vote_count_general_idea():
+    all_ideas = src_models.GeneralIdea.objects.all()
+    for idea in all_ideas:
+        vote_count = (src_models.Vote.objects.filter(generalIdea=idea.id, inProjectIdea__isnull=True)).count();
+        idea.votes = vote_count
+        idea.save()
 
 
 # trash
-class Index(FormView):
-    template_name = "scrumdea/project/login.html"
-    form_class = AuthenticationForm
-
-
-def sign_in_user(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            # Redirect to a success page.
-            return HttpResponseRedirect('/project/create/')
-        else:
-            # Return a 'disabled account' error message
-            return HttpResponse('invalid login credentials entered')
-    else:
-        # Return an 'invalid login' error message.
-        return HttpResponse('invalid login credentials entered')
-
-
-def project(request, project_id):
-    response = "You're looking at project %s."
-    return HttpResponse(response % project_id)
-
-
-def get_name(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = src_forms.ProjectForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = src_forms.ProjectForm()
-
-    return render(request, 'name.html', {'form': form})
-
-
 def page_not_found(request):
     response = render_to_response('scrumdea/404.html', context_instance=RequestContext(request))
     response.status_code = 404

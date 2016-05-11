@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Project, Sprint, Task, GeneralIdea, InProjectIdea
+from .models import Project, Sprint, Task, GeneralIdea, InProjectIdea, Vote
 
 
 class SprintInLine(admin.TabularInline):
@@ -38,3 +38,5 @@ admin.site.register(Sprint)
 admin.site.register(Task)
 
 admin.site.register(GeneralIdea, GeneralIdeaAdmin)
+
+admin.site.register(Vote)

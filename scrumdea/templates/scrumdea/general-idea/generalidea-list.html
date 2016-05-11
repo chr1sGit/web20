@@ -18,6 +18,7 @@
         <strong>Description: </strong>{{ idea.description }}<br/>
         <strong>Votes: </strong>{{ idea.votes }}<br/>
         <a href="{% url "general_idea_detail_view" pk=idea.id %}"> <button type="button" class="btn btn-primary">Details</button></a>
+        <a href="{% url "general_idea_vote_view" pk=idea.id %}"> <button type="button" class="btn btn-primary">Vote</button></a>
 
     {% endfor %}
 {% endblock %}
