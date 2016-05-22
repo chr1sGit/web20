@@ -27,8 +27,9 @@
 				
 				<a class="navbar-brand" href="index.html">SCRUMdea</a> 
 				<div class="btn-toolbar">
-					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align">
-					  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align" 
+							data-toggle="modal" data-target="#user_modal">
+						<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					</button>
 					
 					<button class="navbar-toggle collapsed" aria-expanded="false" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse"> 
@@ -46,13 +47,32 @@
 				</ul> 
 			</div> 				
 
-			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align">
-			  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align" 
+					data-toggle="modal" data-target="#user_modal">
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 			</button>
 			
 		</div> 			
-	</nav>  
-  
+	</nav> 
+	
+    <!-- User Modal -->
+	<div class="modal fade" id="user_modal" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Tom</h4>
+			</div>
+			<div class="modal-body">
+			  <p>Rank: 10 <span class="glyphicon glyphicon-king" aria-hidden="true"></span></p>
+			  <a href="my_projects.html" >My Projects</a>
+			</div>
+		  </div>
+		  
+		</div>
+	</div>
     
 	<div class = "container">
 
@@ -293,6 +313,20 @@
 
 		</footer>
 
+	<script>
+	(function() {
+		var smallButtonWasClicked = false;
+		$(".button-pos-right").click(function(){
+			smallButtonWasClicked = true;			
+		});
+		$(".list-group-item").click(function(e){
+			if(smallButtonWasClicked)
+				e.preventDefault();
+			smallButtonWasClicked = false;
+		});
+	})();
+	</script>
+		
   </body>
   
 </html>

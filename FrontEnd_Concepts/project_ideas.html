@@ -20,7 +20,7 @@
 
   </head>
   
-  <body onload="tabUrls()">
+  <body>
   
 	<nav class="navbar navbar-inverse navbar-static-top"> 
 		<div class="container-fluid">  
@@ -29,7 +29,8 @@
 				
 				<a class="navbar-brand" href="index.html">SCRUMdea</a> 
 				<div class="btn-toolbar">
-					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align">
+					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align" 
+					data-toggle="modal" data-target="#user_modal">
 					  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					</button>
 					
@@ -48,12 +49,32 @@
 				</ul> 
 			</div> 				
 
-			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align">
+			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align" 
+					data-toggle="modal" data-target="#user_modal">
 			  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 			</button>
 			
 		</div> 			
 	</nav>  
+	
+    <!-- User Modal -->
+	<div class="modal fade" id="user_modal" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Tom</h4>
+			</div>
+			<div class="modal-body">
+			  <p>Rank: 10 <span class="glyphicon glyphicon-king" aria-hidden="true"></span></p>
+			  <a href="my_projects.html" >My Projects</a>
+			</div>
+		  </div>
+		  
+		</div>
+	</div>
     
 	
 	<div class="jumbotron">
@@ -68,7 +89,7 @@
 
 	<div class="container">
 		<div class="list-group success">
-			<a href="#" class="list-group-item active">
+			<a href="add_project.html" class="list-group-item active">
 				<h3>Add new Project <span class="glyphicon glyphicon-plus" style="float:right;" aria-hidden="true"></span> </h3>
 			</a>
 			
@@ -178,14 +199,14 @@
 
 	<script>
 	(function() {
-		// Javascript to enable link to tab
-		var url = document.location.toString();
-		if (url.match('#')) {
-			$('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
-		} 
-		// Change hash for page-reload
-		$('.nav-tabs a').on('shown.bs.tab', function (e) {
-			window.location.hash = e.target.hash;
+		var smallButtonWasClicked = false;
+		$(".button-pos-right").click(function(){
+			smallButtonWasClicked = true;			
+		});
+		$(".list-group-item").click(function(e){
+			if(smallButtonWasClicked)
+				e.preventDefault();
+			smallButtonWasClicked = false;
 		});
 	})();
 	</script>

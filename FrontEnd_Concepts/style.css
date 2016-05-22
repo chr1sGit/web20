@@ -12,6 +12,16 @@ html{  background-color: #eaf0f2; height: 100%; }
 body{  font:14px/1.5 Arial, Helvetica, sans-serif;
 }
 
+/* arrow buttons to switch between scrumboards */
+
+.scrumboard-button{
+	position: absolute;
+	top: 0;
+	right: 15px;
+	height: 77px;
+	/*visibility: hidden;*/
+}
+
 /* Buttons in Lists */
 
 .button-pos-right {

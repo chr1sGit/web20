@@ -20,7 +20,7 @@
 
   </head>
   
-  <body onload="tabUrls()">
+  <body>
   
 	<nav class="navbar navbar-inverse navbar-static-top"> 
 		<div class="container-fluid">  
@@ -29,7 +29,8 @@
 				
 				<a class="navbar-brand" href="index.html">SCRUMdea</a> 
 				<div class="btn-toolbar">
-					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align">
+					<button type="button" class="btn btn-primary navbar-right navbar-btn visible-xs" style="float:right;" aria-label="Right Align" 
+					data-toggle="modal" data-target="#user_modal">
 					  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 					</button>
 					
@@ -48,13 +49,32 @@
 				</ul> 
 			</div> 				
 
-			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align">
+			<button type="button" class="btn btn-primary navbar-right navbar-btn hidden-xs" aria-label="Right Align" 
+					data-toggle="modal" data-target="#user_modal">
 			  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 			</button>
 			
 		</div> 			
-	</nav>  
-    
+	</nav>
+	
+    <!-- User Modal -->
+	<div class="modal fade" id="user_modal" role="dialog">
+		<div class="modal-dialog">
+		
+		  <!-- Modal content-->
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <h4 class="modal-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Tom</h4>
+			</div>
+			<div class="modal-body">
+			  <p>Rank: 10 <span class="glyphicon glyphicon-king" aria-hidden="true"></span></p>
+			  <a href="my_projects.html" >My Projects</a>
+			</div>
+		  </div>
+		  
+		</div>
+	</div>
 	
 	<div class="jumbotron">
 		<div class="container">
@@ -63,68 +83,52 @@
 		</div>
 	</div>
 
-    	<div class="container">
-		<ul id="myTab" class="nav nav-tabs" style="margin-bottom: 15px;">
-			<li><a href="#about" data-toggle="tab">About</a></li>
-			<li class="active"><a href="#ideas" data-toggle="tab">Ideas</a></li>
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Sprints <b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="#sprint1" data-toggle="tab">Sprint 1</a></li>
-					<li><a href="#sprint2" data-toggle="tab">Sprint 2</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-
- <div class="container">
+	<div class="container">
 		<div class="list-group">
-			<a href="#" class="list-group-item active">
-				<h3> All My Projects </h3>
+			<a href="add_project.html" class="list-group-item active">
+				<h3>Add new Project <span class="glyphicon glyphicon-plus" style="float:right;" aria-hidden="true"></span> </h3>
+			</a>
+			
+			<a href="project_page.html" class="list-group-item">
+				<h3>Project Management Tool</h3>
+				<p> Implement new Project Management Tool which integrates Scrum. ccusam et eirmod consetetur sadipscing elitr, sed diam nonumy eirmod</p>
+				<br>
+				<div class="container-fluid">
+					<div class="btn-group button-pos-right">
+						<button class="btn btn-primary pull-right" type="button">
+						Updates <span class="badge">0</span>
+					</button>
+					</div>
+				</div>
 			</a>
 
-			<a href="#" class="list-group-item">
+			<a href="project_page.html" class="list-group-item">
+				<h3>New DBMS</h3>
+				<p> invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+				<br>
+				<div class="container-fluid">
+					<div class="btn-group button-pos-right">
+						<button class="btn btn-primary pull-right" type="button">
+						Updates <span class="badge">9</span>
+					</button>
+					</div>
+				</div>
+			</a>
 
-						<a href="project_page.html" class="list-group-item">
-							<h3>Project Management Tool</h3>
-							<p> Implement new Project Management Tool which integrates Scrum. ccusam et eirmod consetetur sadipscing elitr, sed diam nonumy eirmod</p>
-							<br>
-							<div class="container-fluid">
-								<div class="btn-group button-pos-right">
-									<button class="btn btn-primary pull-right" type="button">
-                                    Updates <span class="badge">0</span>
-                                </button>
-								</div>
-							</div>
-						</a>
-
-                        <a href="project_page.html" class="list-group-item">
-							<h3>New DBMS</h3>
-							<p> invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
-							<br>
-							<div class="container-fluid">
-								<div class="btn-group button-pos-right">
-									<button class="btn btn-primary pull-right" type="button">
-                                    Updates <span class="badge">9</span>
-                                </button>
-								</div>
-							</div>
-						</a>
-
-                        <a href="project_page.html" class="list-group-item">
-							<h3>Survey on Customer Satisfaction</h3>
-							<p> eirmod consetetur sadipscing elitr, sed diam non eirmod consetetur sadipscing elitr, sed diam non</p>
-							<br>
-							<div class="container-fluid">
-								<div class="btn-group button-pos-right">
-									<button class="btn btn-primary pull-right" type="button">
-                                    Updates <span class="badge">3</span>
-                                </button>
-								</div>
-							</div>
-						</a>
-			</div>
-		  </div>
+			<a href="project_page.html" class="list-group-item">
+				<h3>Survey on Customer Satisfaction</h3>
+				<p> eirmod consetetur sadipscing elitr, sed diam non eirmod consetetur sadipscing elitr, sed diam non</p>
+				<br>
+				<div class="container-fluid">
+					<div class="btn-group button-pos-right">
+						<button class="btn btn-primary pull-right" type="button">
+						Updates <span class="badge">3</span>
+					</button>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
 
 
 			
@@ -190,14 +194,14 @@
 
 	<script>
 	(function() {
-		// Javascript to enable link to tab
-		var url = document.location.toString();
-		if (url.match('#')) {
-			$('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
-		} 
-		// Change hash for page-reload
-		$('.nav-tabs a').on('shown.bs.tab', function (e) {
-			window.location.hash = e.target.hash;
+		var smallButtonWasClicked = false;
+		$(".button-pos-right").click(function(){
+			smallButtonWasClicked = true;			
+		});
+		$(".list-group-item").click(function(e){
+			if(smallButtonWasClicked)
+				e.preventDefault();
+			smallButtonWasClicked = false;
 		});
 	})();
 	</script>
