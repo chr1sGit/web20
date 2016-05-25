@@ -25,7 +25,14 @@ from scrumdea import forms as src_forms
 # General Idea Views
 class GeneralIdeaListView(LoginRequiredMixin, ListView):
     model = src_models.GeneralIdea
-    template_name = "scrumdea/general-idea/generalidea-list.html"
+    template_name = "scrumdea/final/index.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(GeneralIdeaListView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['projects'] = src_models.Project.objects.all()
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         update_vote_count_general_idea()
@@ -95,7 +102,7 @@ class GeneralIdeaDeleteView(LoginRequiredMixin, DeleteView):
 # Project Views
 class ProjectNewListView(LoginRequiredMixin, ListView):
     model = src_models.Project
-    template_name = "scrumdea/project/project-list.html"
+    template_name = "scrumdea/final/my_projects.html"
 
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
@@ -112,8 +119,8 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Project
-    fields = ['name', 'description']
-    template_name = "scrumdea/project/project-create.html"
+    form_class = src_forms.ProjectForm
+    template_name = "scrumdea/final/add_project.html"
 
     def form_valid(self, form):
         messages.success(self.request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
@@ -125,6 +132,8 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
                        extra_tags='alert alert-danger safe')
         return self.render_to_response(self.get_context_data())
+
+    context_object_name = 'project'
 
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
@@ -155,11 +164,7 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
-    model = src_models.Project
-    template_name = 'scrumdea/project/project-create.html'
-    context_object_name = 'project'
-    form_class = src_forms.ProjectForm
+
 
 
 # sprint views
