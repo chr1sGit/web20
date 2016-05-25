@@ -86,12 +86,13 @@
 	<div class="container">
 		<ul id="myTab" class="nav nav-tabs" style="margin-bottom: 15px;">
 			<li><a href="#about" data-toggle="tab">About</a></li>
-			<li class="active"><a href="#ideas" data-toggle="tab">Ideas</a></li>
+			<li class="active"><a href="#tasks" data-toggle="tab">Tasks</a></li>
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Sprints <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="#sprint1" data-toggle="tab">Sprint 1</a></li>
 					<li><a href="#sprint2" data-toggle="tab">Sprint 2</a></li>
+					<li><a href="#" data-toggle="tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add sprint</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -99,32 +100,37 @@
 		<div id="myTabContent" class="tab-content" >
 			<div class="tab-pane fade" id="about">
 				<div class="container">
-                        <div class="row">
-                            <div class="col-sm-9">
-					<h3>Project X: Just so much better than Project W</h3>
-					<p>This project is super cool. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam etjusto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-				            </div>
+					<div class="row">
+						<div class="col-sm-9">
+							<h3>Project X: Just so much better than Project W</h3>
+							<p>This project is super cool. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam etjusto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+							
+							<div class="btn-group pull-right">
+								<a href="edit_project.html" type="button" class="btn btn-primary">Edit</a>
+								<button type="button" class="btn btn-danger">Delete</button>
+							</div>					
+						</div>
 
-                            <div class="col-sm-3">
-					<h3>Project Administrator:</h3>
-                                <p>Harry Potter</p>
-					<h3>Date Of Next Sprint:</h3>
-                                <p>25.10.2016</p>
-                                <h3>Expected End of Project</h3>
-                                <p>01.02.2017</p>
-				            </div>
-                        </div>
+						<div class="col-sm-3">
+							<h3>Project Administrator:</h3>
+							<p>Harry Potter</p>
+							<h3>Date Of Next Sprint:</h3>
+							<p>25.10.2016</p>
+							<h3>Expected End of Project</h3>
+							<p>01.02.2017</p>
+						 </div>
+					</div>
                 </div>
 			</div>
-			<div class="tab-pane fade in active" id="ideas">
+			<div class="tab-pane fade in active" id="tasks">
 				<div class="container">
 					<div class="list-group">				
-						<a href="add_idea.html" class="list-group-item active">
-							<h3>Add new Idea <span class="glyphicon glyphicon-plus" style="float:right;" aria-hidden="true"></span> </h3>
+						<a href="add_task.html" class="list-group-item active">
+							<h3>Add new Task Idea <span class="glyphicon glyphicon-plus" style="float:right;" aria-hidden="true"></span> </h3>
 						</a>
 						
-						<a href="#" class="list-group-item">
+						<a href="task_details.html" class="list-group-item">
 							<h3>First idea</h3>
 							<p>Description: Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
 							<br>
@@ -134,7 +140,7 @@
 								</div>
 							</div>	
 						</a>
-						<a href="#" class="list-group-item">
+						<a href="task_details.html" class="list-group-item">
 							<h3>Second idea</h3>
 							<p>justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolo</p>
 							<br>
@@ -144,7 +150,7 @@
 								</div>
 							</div>					
 						</a>
-						<a href="#" class="list-group-item">
+						<a href="task_details.html" class="list-group-item">
 							<h3>Third idea</h3>
 							<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed</p>
 							<br>
@@ -160,7 +166,7 @@
 			<div class="tab-pane fade" id="sprint1">	
 				<div class="container-fluid">
 				
-					<div class="container-fluid"><h2>Sprint 1</h2></div>
+					<div class="container-fluid"><h2>Sprint 1<button type="button" class="btn btn-danger pull-right">Delete Sprint</button></h2> </div>
 					
 					<div class="row-fluid">						
 						<div class="col-md-3 scrumboard">
@@ -171,7 +177,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some task 1</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -181,7 +187,7 @@
 												</div>
 											</div>	
 										</a>									
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some other task 1</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -191,7 +197,7 @@
 												</div>
 											</div>	
 										</a>
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>A third task 1</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -213,13 +219,13 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in progress 1</h3>
 											<p>Description: Click the button in the bottom right corner to see who is assigned on this task</p>
 											<br>
 											<div class="container-fluid">
 												<div class="btn-group button-pos-right">
-													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
 												</div>
 											</div>	
 										</a>
@@ -237,7 +243,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in review 1</h3>
 											<p>Description: Click the button in the bottom right corner to accept the solution to this task </p>
 											<br>
@@ -247,7 +253,7 @@
 												</div>
 											</div>	
 										</a>
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Another item in review 1</h3>
 											<p>Description: Click the button in the bottom right corner to accept the solution to this task </p>
 											<br>
@@ -271,7 +277,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some finished item 1</h3>
 											<p>Description </p>
 										</a>
@@ -282,7 +288,8 @@
 							</div>
 						</div>
 						
-					</div>
+					</div>				
+					
 
 				</div>	
 			</div>
@@ -290,7 +297,8 @@
 			<div class="tab-pane fade" id="sprint2">
 				<div class="container-fluid">
 					
-					<div class="container-fluid"><h2>Sprint 2</h2></div>
+					<div class="container-fluid"><h2>Sprint 2<button type="button" class="btn btn-danger pull-right">Delete Sprint</button></h2> </div>
+					
 					<div class="row-fluid">					
 						<div class="col-md-3 scrumboard">
 							<div class="panel panel-primary">
@@ -300,7 +308,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some task 2</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -310,7 +318,7 @@
 												</div>
 											</div>	
 										</a>									
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some other task 2</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -320,7 +328,7 @@
 												</div>
 											</div>	
 										</a>
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>A third task 2</h3>
 											<p>Description: Click the button in the bottom right corner to get assigned to the task</p>
 											<br>
@@ -343,33 +351,33 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in progress 2</h3>
 											<p>Description: Click the button in the bottom right corner to see who is assigned on this task</p>
 											<br>
 											<div class="container-fluid">
 												<div class="btn-group button-pos-right">
-													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
 												</div>
 											</div>	
 										</a>
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in progress 2</h3>
 											<p>Description: Click the button in the bottom right corner to see who is assigned on this task</p>
 											<br>
 											<div class="container-fluid">
 												<div class="btn-group button-pos-right">
-													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
 												</div>
 											</div>	
 										</a>
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in progress 2</h3>
 											<p>Description: Click the button in the bottom right corner to see who is assigned on this task</p>
 											<br>
 											<div class="container-fluid">
 												<div class="btn-group button-pos-right">
-													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+													<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
 												</div>
 											</div>	
 										</a>
@@ -387,7 +395,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some item in review 2</h3>
 											<p>Description: Click the button in the bottom right corner to accept the solution to this task </p>
 											<br>
@@ -411,7 +419,7 @@
 							  
 									<div class="list-group">
 										
-										<a href="#" class="list-group-item">
+										<a href="task_details.html" class="list-group-item">
 											<h3>Some finished item 2</h3>
 											<p>Description </p>
 										</a>
