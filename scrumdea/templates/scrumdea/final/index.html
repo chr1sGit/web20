@@ -154,13 +154,15 @@
                                 <a href="{% url "general_idea_detail_view" pk=idea.id %}" class="list-group-item">
                                     <h3>{{ forloop.counter }}. {{ idea.title }}</h3>
                                     <p>{{ idea.description }}</p>
+
                                     <br>
+
                                     <div class="container-fluid">
                                         <div class="btn-group button-pos-right">
-                                            <a href="{% url "general_idea_vote_view" pk=idea.id %}">
-                                                <button type="button"
-                                                        class="btn btn-success btn">{{ idea.votes }}</button>
-                                            </a>
+
+
+                                            <button href="{% url "general_idea_vote_view" pk=idea.id %}" type="submit"
+                                                    class="btn btn-success btn">{{ idea.votes }}</button>
                                             <button type="button" class="btn btn-danger">4</button>
                                         </div>
                                     </div>

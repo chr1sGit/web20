@@ -20,6 +20,16 @@ urlpatterns = [
     url(r'^projects/(?P<pk>\d+)/edit$', views.ProjectEditView.as_view(), name='project_edit_view'),
     url(r'^projects/(?P<pk>\d+)/delete$', views.ProjectDeleteView.as_view(), name='project_delete_view'),
 
+    url(r'^projects/(?P<pk>\d+)/task-idea/create$', views.InProjectIdeaCreateView.as_view(),
+        name='in_project_create_view'),
+    url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/$', views.InProjectIdeaDetailView.as_view(),
+        name='in_project_idea_detail_view'),
+    url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/delete$', views.InProjectIdeaDeleteView.as_view(),
+        name='in_project_idea_delete_view'),
+    url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/edit$', views.InProjectIdeaEditView.as_view(),
+        name='in_project_idea_edit_view'),
+
+
     # Sprints
     url(r'^projects/(?P<pk>\d+)/sprints/$', views.SprintListView.as_view(), name='sprint_list_view'),
     url(r'^projects/(?P<pk>\d+)/sprints/create$', views.SprintCreateView.as_view(), name='sprint_create_view'),

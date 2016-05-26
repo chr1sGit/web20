@@ -99,6 +99,72 @@ class GeneralIdeaDeleteView(LoginRequiredMixin, DeleteView):
         return reverse('general_idea_list_view')
 
 
+# InProjectIdea
+class InProjectIdeaCreateView(LoginRequiredMixin, CreateView):
+    model = src_models.InProjectIdea
+    fields = ['title', 'description']
+    template_name = "scrumdea/final/add_inProjectIdea.html"
+
+    def get_success_url(self):
+        return reverse('project_detail_view', kwargs={"pk": self.object.project.id})
+
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.project = src_models.Project.objects.get(id=self.kwargs['pk'])
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
+
+
+class InProjectIdeaDetailView(LoginRequiredMixin, DetailView):
+    model = src_models.InProjectIdea
+    template_name = "scrumdea/final/inProjectIdea_details.html"
+
+    def get_object(self, queryset=None):
+        return src_models.InProjectIdea.objects.get(id=self.kwargs['ipk'])
+
+
+class InProjectIdeaDeleteView(LoginRequiredMixin, DeleteView):
+    model = src_models.Sprint
+    template_name = "scrumdea/task/task-delete.html"
+
+    def get_object(self, queryset=None):
+        return src_models.InProjectIdea.objects.get(id=self.kwargs['ipk'])
+
+    def get_success_url(self):
+        return reverse('project_detail_view',
+                       kwargs={'pk': self.kwargs['pk']})
+
+
+class InProjectIdeaEditView(LoginRequiredMixin, UpdateView):
+    model = src_models.InProjectIdea
+    fields = ['title', 'description']
+    template_name = "scrumdea/final/edit_task.html"
+
+    def get_object(self, queryset=None):
+        return src_models.InProjectIdea.objects.get(id=self.kwargs['ipk'])
+
+    def get_success_url(self):
+        return reverse('project_detail_view',
+                       kwargs={'pk': self.kwargs['pk']})
+
+    def form_valid(self, form):
+        messages.success(self.request, "<b>Success!</b> Sprint updated! :)", extra_tags='alert alert-success safe')
+        self.object = form.save(commit=False)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
+                       extra_tags='alert alert-danger safe')
+        return self.render_to_response(self.get_context_data())
+
+
 # Project Views
 class ProjectNewListView(LoginRequiredMixin, ListView):
     model = src_models.Project
@@ -107,13 +173,25 @@ class ProjectNewListView(LoginRequiredMixin, ListView):
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Project
-    template_name = 'scrumdea/project/project-detail.html'
+    template_name = 'scrumdea/final/project_page.html'
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        context['sprints'] = src_models.Sprint.objects.filter(project=self.kwargs['pk'])
+        sprint_list = src_models.Sprint.objects.filter(project=self.kwargs['pk'])
+        sprints = []
+        for sprint in sprint_list:
+            sprint_dict = {'object': sprint,
+                           'tasks_todo': src_models.Task.objects.filter(sprint=sprint.id, phase='ToDo'),
+                           'tasks_in_progress': src_models.Task.objects.filter(sprint=sprint.id, phase='iP'),
+                           'tasks_in_review': src_models.Task.objects.filter(sprint=sprint.id, phase='iR'),
+                           'tasks_finished': src_models.Task.objects.filter(sprint=sprint.id, phase='F')}
+            sprints.append(sprint_dict)
+
+        context['sprints'] = sprints
+        context['idea_list'] = src_models.InProjectIdea.objects.filter(project=self.kwargs['pk'])
+        context['newest_sprint_id'] = (src_models.Sprint.objects.filter(project=self.kwargs['pk']))[0].id
         return context
 
 
@@ -126,7 +204,11 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "<b>Success!</b> New Idea created :)", extra_tags='alert alert-success safe')
         self.object = form.save(commit=False)
         self.object.save()
-        return HttpResponseRedirect(self.get_absolute_url())
+        sprint1 = src_models.Sprint()
+        sprint1.name = "Sprint 1"
+        sprint1.project = self.object
+        sprint1.save()
+        return HttpResponseRedirect(self.object.get_absolute_url())
 
     def form_invalid(self, form):
         messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
@@ -147,13 +229,13 @@ class ProjectDeleteView(LoginRequiredMixin, DeleteView):
 class ProjectEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Project
     fields = ['name', 'description']
-    template_name = "scrumdea/project/project-update.html"
+    template_name = "scrumdea/final/edit_project.html"
 
     def get_success_url(self):
         return reverse('project_detail_view', args=(self.object.id,))
 
     def form_valid(self, form):
-        messages.success(self.request, "<b>Success!</b> Idea updated! :)", extra_tags='alert alert-success safe')
+        messages.success(self.request, "<b>Success!</b> Project updated! :)", extra_tags='alert alert-success safe')
         self.object = form.save(commit=False)
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -162,9 +244,6 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
         messages.error(self.request, "<b>Oh Snap!</b> Something went wrong. Check your input.",
                        extra_tags='alert alert-danger safe')
         return self.render_to_response(self.get_context_data())
-
-
-
 
 
 # sprint views
@@ -244,7 +323,7 @@ class SprintDeleteView(LoginRequiredMixin, DeleteView):
 class SprintEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Sprint
     fields = ['name', ]
-    template_name = "scrumdea/sprint/task-update.html"
+    template_name = "scrumdea/sprint/sprint-update.html"
 
     def get_object(self, queryset=None):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
@@ -286,7 +365,7 @@ class TaskListView(LoginRequiredMixin, ListView):
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = src_models.Task
-    template_name = 'scrumdea/task/task-create.html'
+    template_name = 'scrumdea/final/add_task.html'
     context_object_name = 'task'
     form_class = src_forms.TaskForm
 
@@ -308,7 +387,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Task
-    template_name = 'scrumdea/task/task-detail.html'
+    template_name = 'scrumdea/final/task_details.html'
 
     def get_object(self, queryset=None):
         return src_models.Task.objects.get(id=self.kwargs['tpk'])

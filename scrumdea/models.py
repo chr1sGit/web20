@@ -11,7 +11,7 @@ from django.utils import timezone
 class Project(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    creation_date = timezone.now()
+    creation_date = models.DateTimeField(auto_now_add=True)
     finishing_date = models.DateTimeField(null=True)
     visible = models.BooleanField(default=True)
 
@@ -40,7 +40,7 @@ class Task(models.Model):
     )
     phase = models.CharField(max_length=4,
                              choices=PHASE,
-                             default='ToDo')
+                             default='Idea')
     name = models.CharField(max_length=300, default='no name')
     description = models.TextField()
     assignedUser = models.ForeignKey(User, related_name='tasks', verbose_name='User')
