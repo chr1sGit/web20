@@ -62,6 +62,9 @@ class GeneralIdea(models.Model):
     votes = models.IntegerField(default=0)
     transfered_to_project = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['votes']
+
 
 class Vote(models.Model):
     class Meta:

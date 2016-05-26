@@ -39,9 +39,25 @@ class GeneralIdeaListView(LoginRequiredMixin, ListView):
         return super(GeneralIdeaListView, self).dispatch(request, *args, **kwargs)
 
 
+class GeneralIdeaListListView(LoginRequiredMixin, ListView):
+    model = src_models.GeneralIdea
+    template_name = "scrumdea/final/project_ideas.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(GeneralIdeaListListView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['projects'] = src_models.Project.objects.all()
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        update_vote_count_general_idea()
+        return super(GeneralIdeaListListView, self).dispatch(request, *args, **kwargs)
+
+
 class GeneralIdeaDetailView(LoginRequiredMixin, DetailView):
     model = src_models.GeneralIdea
-    template_name = "scrumdea/general-idea/generalidea-detail.html"
+    template_name = "scrumdea/final/project_idea.html"
 
     def dispatch(self, request, *args, **kwargs):
         # called during init of class
@@ -165,10 +181,36 @@ class InProjectIdeaEditView(LoginRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
+class InProjectIdeaCreateTaskView(LoginRequiredMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        task_idea = src_models.InProjectIdea.objects.get(id=kwargs['ipk'])
+        sprint_count = src_models.Sprint.objects.filter(project=kwargs['pk']).count()
+        sprint_name = "Sprint " + str(sprint_count)
+        current_sprint = src_models.Sprint.objects.get(name=sprint_name, project=kwargs['pk'])
+
+        new_task = src_models.Task()
+        new_task.sprint = current_sprint
+        new_task.phase = "todo"
+        new_task.name = task_idea.title
+        new_task.description = task_idea.description
+        new_task.assignedUser = self.request.user
+        new_task.save()
+
+        task_idea.delete()
+
+        messages.success(self.request, "<b>Successfully</b> added idea to tasks! :)", extra_tags='alert alert-success safe')
+        return reverse('project_detail_view', kwargs={'pk': self.kwargs['pk']})
+
+
 # Project Views
 class ProjectNewListView(LoginRequiredMixin, ListView):
     model = src_models.Project
     template_name = "scrumdea/final/my_projects.html"
+
+
+class ProjectRunningListView(LoginRequiredMixin, ListView):
+    model = src_models.Project
+    template_name = "scrumdea/final/running_projects.html"
 
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
@@ -190,7 +232,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
             sprints.append(sprint_dict)
 
         context['sprints'] = sprints
-        context['idea_list'] = src_models.InProjectIdea.objects.filter(project=self.kwargs['pk'])
+        context['idea_list'] = src_models.InProjectIdea.objects.filter(project=self.kwargs['pk']).order_by('-votes')
         context['newest_sprint_id'] = (src_models.Sprint.objects.filter(project=self.kwargs['pk']))[0].id
         return context
 
@@ -220,7 +262,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
 
 class ProjectDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Project
-    template_name = "scrumdea/project/project-delete.html"
+    template_name = "scrumdea/final/delete_project.html"
 
     def get_success_url(self):
         return reverse('project_list_view')
@@ -284,21 +326,41 @@ class SprintCreateView(LoginRequiredMixin, CreateView):
         return self.render_to_response(self.get_context_data())
 
 
+class SprintAutoCreateView(LoginRequiredMixin, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        sprint = src_models.Sprint()
+        sprint_count = src_models.Sprint.objects.filter(project=kwargs['pk']).count()
+        sprint.name = "Sprint " + str(sprint_count + 1)
+        sprint.project = src_models.Project.objects.get(id=kwargs['pk'])
+        sprint.save()
+        messages.success(self.request, "<b>Success!</b> New Sprint created! :)", extra_tags='alert alert-success safe')
+        return reverse('project_detail_view', kwargs={'pk': self.kwargs['pk']})
+
+
 class SprintDetailView(LoginRequiredMixin, DetailView):
     model = src_models.Sprint
-    template_name = 'scrumdea/sprint/sprint-detail.html'
+    template_name = 'scrumdea/final/sprint_details.html'
 
     def get_object(self, queryset=None):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
 
     def get_context_data(self, **kwargs):
         context = super(SprintDetailView, self).get_context_data(**kwargs)
-        context['tasks_todo'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='ToDo')
-        context['tasks_in_progress'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iP')
-        context['tasks_in_review'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='iR')
-        context['tasks_finished'] = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F')
-        context['project'] = src_models.Project.objects.get(id=self.kwargs['pk'])
-        context['sprint'] = src_models.Sprint.objects.get(id=self.kwargs['spk'])
+
+        sprint_list = []
+        sprint_list.append(src_models.Sprint.objects.get(id=self.kwargs['spk']))
+        sprints = []
+        for sprint in sprint_list:
+            sprint_dict = {'object': sprint,
+                           'tasks_todo': src_models.Task.objects.filter(sprint=sprint.id, phase='ToDo'),
+                           'tasks_in_progress': src_models.Task.objects.filter(sprint=sprint.id, phase='iP'),
+                           'tasks_in_review': src_models.Task.objects.filter(sprint=sprint.id, phase='iR'),
+                           'tasks_finished': src_models.Task.objects.filter(sprint=sprint.id, phase='F')}
+            sprints.append(sprint_dict)
+
+        context['sprints'] = sprints
+        context['allsprints'] = src_models.Sprint.objects.filter(project=self.kwargs['pk'])
+
         percent_complete = 0
         tasks_count = src_models.Task.objects.filter(sprint=self.kwargs['spk']).count()
         tasks_finished = src_models.Task.objects.filter(sprint=self.kwargs['spk'], phase='F').count()
@@ -310,14 +372,14 @@ class SprintDetailView(LoginRequiredMixin, DetailView):
 
 class SprintDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Sprint
-    template_name = "scrumdea/sprint/sprint-delete.html"
+    template_name = "scrumdea/final/delete_sprint.html"
 
     def get_object(self, queryset=None):
         return src_models.Sprint.objects.get(id=self.kwargs['spk'])
 
     def get_success_url(self):
-        return reverse('sprint_list_view',
-                       kwargs={'pk': (src_models.Sprint.objects.get(id=self.kwargs['spk'])).project.id})
+        return reverse('project_detail_view',
+                       kwargs={'pk': self.kwargs['pk']})
 
 
 class SprintEditView(LoginRequiredMixin, UpdateView):
@@ -403,7 +465,7 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
 class TaskEditView(LoginRequiredMixin, UpdateView):
     model = src_models.Task
     form_class = src_forms.TaskForm
-    template_name = "scrumdea/task/task-update.html"
+    template_name = "scrumdea/final/edit_task.html"
 
     def get_object(self, queryset=None):
         return src_models.Task.objects.get(id=self.kwargs['tpk'])
@@ -428,7 +490,7 @@ class TaskEditView(LoginRequiredMixin, UpdateView):
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Task
-    template_name = "scrumdea/task/task-delete.html"
+    template_name = "scrumdea/final/delete-task.html"
 
     def get_object(self, queryset=None):
         return src_models.Task.objects.get(id=self.kwargs['tpk'])

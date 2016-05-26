@@ -49,8 +49,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -61,109 +61,109 @@
 
     </div>
 </nav>
-	
-    <!-- User Modal -->
-	<div class="modal fade" id="user_modal" role="dialog">
-		<div class="modal-dialog">
-		
-		  <!-- Modal content-->
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <button type="button" class="close" data-dismiss="modal">&times;</button>
-			  <h4 class="modal-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Tom</h4>
-			</div>
-			<div class="modal-body">
-			  <p>Rank: 10 <span class="glyphicon glyphicon-king" aria-hidden="true"></span></p>
-			  <a href="{% url "project_list_view" %}" >My Projects</a>
-			</div>
-		  </div>
-		  
-		</div>
-	</div>
-    
-	
-	<div class="jumbotron">
-		<div class="container">
-			<h1>Add new Task Idea</h1>
-			<p> Your personal contribution to this project!</p>
-		</div>
-	</div>
-	
 
-	<div class="container">
-        <form action="" method="post" class="form-horizontal">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Submit</button>
+<!-- User Modal -->
+<div class="modal fade" id="user_modal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Tom</h4>
+            </div>
+            <div class="modal-body">
+                <p>Rank: 10 <span class="glyphicon glyphicon-king" aria-hidden="true"></span></p>
+                <a href="{% url "project_list_view" %}">My Projects</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Add new Task Idea</h1>
+        <p> Your personal contribution to this project!</p>
+    </div>
+</div>
+
+
+<div class="container">
+    <form action="" method="post" class="form-horizontal">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-	</div>
-			
-	
 
-    
-	<footer class="footer-distributed">
+</div>
 
-		<div class="footer-left">
 
-			<h3>SCRUMdea</h3>
+<footer class="footer-distributed">
 
-			<p class="footer-links">
-				<a href="#">Home</a>
-				·
-				<a href="#">Pricing</a>
-				·
-				<a href="#">About</a>
-				·
-				<a href="#">Faq</a>
-				·
-				<a href="#">Contact</a>
-			</p>
+    <div class="footer-left">
 
-			<p class="footer-company-name">SCRUMdea &copy; 2016</p>
-		</div>
+        <h3>SCRUMdea</h3>
 
-		<div class="footer-center">
+        <p class="footer-links">
+            <a href="#">Home</a>
+            ·
+            <a href="#">Pricing</a>
+            ·
+            <a href="#">About</a>
+            ·
+            <a href="#">Faq</a>
+            ·
+            <a href="#">Contact</a>
+        </p>
 
-			<div>
-				<i class="fa fa-map-marker"></i>
-				<p><span>Scrumstreet 12</span> Zurich, Switzerland</p>
-			</div>
+        <p class="footer-company-name">SCRUMdea &copy; 2016</p>
+    </div>
 
-			<div>
-				<i class="fa fa-phone"></i>
-				<p>+41 44 848 29 40</p>
-			</div>
+    <div class="footer-center">
 
-			<div>
-				<i class="fa fa-envelope"></i>
-				<p><a href="mailto:support@company.com">support@scrumdea.com</a></p>
-			</div>
-		</div>
+        <div>
+            <i class="fa fa-map-marker"></i>
+            <p><span>Scrumstreet 12</span> Zurich, Switzerland</p>
+        </div>
 
-		<div class="footer-right">
+        <div>
+            <i class="fa fa-phone"></i>
+            <p>+41 44 848 29 40</p>
+        </div>
 
-			<p class="footer-company-about">
-				<span>About SCRUMdea</span>
-				Lorem ipsum dolor sit amet, consectateur adispicing elit. Fusce euismod convallis velit, eu auctor lacus vehicula sit amet.
-			</p>
+        <div>
+            <i class="fa fa-envelope"></i>
+            <p><a href="mailto:support@company.com">support@scrumdea.com</a></p>
+        </div>
+    </div>
 
-			<div class="footer-icons">
-				<a href="#"><i class="fa fa-facebook"></i></a>
-				<a href="#"><i class="fa fa-twitter"></i></a>
-				<a href="#"><i class="fa fa-linkedin"></i></a>
-				<a href="#"><i class="fa fa-github"></i></a>
+    <div class="footer-right">
 
-			</div>
-		</div>
+        <p class="footer-company-about">
+            <span>About SCRUMdea</span>
+            Lorem ipsum dolor sit amet, consectateur adispicing elit. Fusce euismod convallis velit, eu auctor lacus
+            vehicula sit amet.
+        </p>
 
-	</footer>
+        <div class="footer-icons">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+            <a href="#"><i class="fa fa-github"></i></a>
 
-	<script>
-	(function() {
-		
-	})();
-	</script>
-	
-  </body>
-  
+        </div>
+    </div>
+
+</footer>
+
+<script>
+    (function () {
+
+    })();
+</script>
+
+</body>
+
 </html>

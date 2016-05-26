@@ -49,8 +49,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -89,20 +89,19 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1>Edit Task</h1>
-        <p>{{ object.name }}</p>
+        <h1>Delete Sprint</h1>
+        <p>Do you really want to delete this sprint with all it's subtasks?</p>
     </div>
 </div>
 
 
 <div class="container">
-    <p><strong>{{ context.message }}</strong></p>
+
     <form action="" method="post">{% csrf_token %}
-    <p style="margin-bottom: 30px;">Are you sure you want to delete this sprint with all its tasks?</p>
-    <h4>{{ object.title }}</h4>
-    <p>Created: {{ object.creation_date }}</p>
-    <p style="margin-bottom: 30px;">{{ object.description }}</p>
-    <input type="submit" value="Delete idea" class="btn btn-danger"/>
+    <h2>Sprint: <strong>{{ object.name }}</strong></h2>
+    <p>Created on {{ object.creation_date }}</p>
+        <p style="margin-bottom: 30px;"></p>
+    <input type="submit" value="Delete sprint" class="btn btn-danger"/>
 </form>
 </div>
 

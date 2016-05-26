@@ -49,8 +49,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -84,43 +84,35 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1>Task Idea</h1>
-        <p>Detailview</p>
+        <h1>{{ object.title }}</h1>
+        <p>Task Idea Detailview</p>
     </div>
 </div>
 
 
 <div class="container">
-    <div class="btn-group pull-right">
-        <a href="{% url "in_project_idea_edit_view" pk=object.project.id ipk=object.id %}" type="button" class="btn btn-primary">Edit</a>
-        <a href="{% url "in_project_idea_delete_view" pk=object.project.id ipk=object.id %}" type="button" class="btn btn-danger">Delete</a>
-    </div>
-    <h3>{{ object.title }}</h3>
-    <p>{{ object.description }}</p>
-    <span style="color:red">/// if (in ToDo || in Progress || in Finished)</span>
-    <p><b>Assigned User:</b> Tom</p>
 
+    <h3>Description
+        <div class="btn-group pull-right">
+            <a href="{% url "in_project_idea_edit_view" pk=object.project.id ipk=object.id %}" type="button"
+               class="btn btn-primary">Edit</a>
+            <a href="{% url "in_project_idea_delete_view" pk=object.project.id ipk=object.id %}" type="button"
+               class="btn btn-danger">Delete</a>
+        </div>
+    </h3>
+    <p>{{ object.description }}</p>
+    <br>
+    <h2><strong>Votes: </strong>{{ object.votes }}</h2>
+    <p><b>Submitted by:</b> Tom</p>
+
+
+    <br>
+    <br>
+    <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary">Move to previous Sprint</button>
-        <button type="button" class="btn btn-primary">Move to next Sprint</button>
+        <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Vote for this idea</button>
+        <a href="{% url "in_project_create_task_view" pk=object.project.id ipk=object.id %}" type="button" class="btn btn-primary">Add this idea as task to current sprint</a>
     </div>
-    <br>
-    <br>
-    <br>
-    <p style="color:red">/// if (not added to a sprint yet)</p>
-    <button type="button" class="btn btn-primary">Add this task to current sprint</button>
-    <br><br>
-    <p style="color:red">/// if (in ToDo)</p>
-    <button type="button" class="btn btn-primary">Sign up for this task <span class="glyphicon glyphicon-check"
-                                                                              aria-hidden="true"></span></button>
-    <br><br>
-    <p style="color:red">/// if (in Progress)</p>
-    <button type="button" class="btn btn-primary">Send to review <span class="glyphicon glyphicon-ok"
-                                                                       aria-hidden="true"></span></button>
-    <br><br>
-    <p style="color:red">/// if (in Review)</p>
-    <button type="button" class="btn btn-primary">Send to finished <span class="glyphicon glyphicon-ok"
-                                                                         aria-hidden="true"></span></button>
 
 </div>
 

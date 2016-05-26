@@ -40,3 +40,5 @@ admin.site.register(Task)
 admin.site.register(GeneralIdea, GeneralIdeaAdmin)
 
 admin.site.register(Vote)
+
+admin.site.register(InProjectIdea)

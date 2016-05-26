@@ -49,8 +49,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -84,38 +84,37 @@
 	
 	<div class="jumbotron">
 		<div class="container">
-			<h1>Task</h1>
+			<h1>Task: {{ object.name }}</h1>
 			<p>Detailview</p>
 		</div>
 	</div>
 	
 
 	<div class="container">
-        <div class="btn-group pull-right">
-			<a href="{% url "task_edit_view" pk=project.id spk=object.sprint.id tpk=object.id %}" type="button" class="btn btn-primary">Edit</a>
-			<a href="{% url "task_delete_view" pk=project.id spk=object.sprint.id tpk=object.id%}" type="button" class="btn btn-danger">Delete</a>
-		</div>
-		<h3>{{ object.name }}</h3>
-		<p>{{ object.description }}</p>
-		<span style="color:red">/// if (in ToDo || in Progress || in Finished)</span>
-		<p><b>Assigned User:</b> Tom</p>
-		
-		<div class="btn-group">
-			<button type="button" class="btn btn-primary">Move to previous Sprint</button>
-			<button type="button" class="btn btn-primary">Move to next Sprint</button>
-		</div>
-		<br>
+
+        <h3>Description
+            <div class="btn-group pull-right">
+                <a href="{% url "task_edit_view" pk=project.id spk=object.sprint.id tpk=object.id %}" type="button"
+                   class="btn btn-primary">Edit</a>
+                <a href="{% url "task_delete_view" pk=project.id spk=object.sprint.id tpk=object.id %}" type="button"
+                   class="btn btn-danger">Delete</a>
+            </div>
+        </h3>
+        <p>{{ object.description }}</p>
+        <br>
+        <h4><strong>Current Phase:</strong> {{ object.phase }} </h4>
+        <h4><strong>Assigned User: </strong> {{ object.assignedUser }}</h4>
+        <h4><strong>Belongs to: </strong>{{ object.sprint.name }}</h4>
+        <p>&nbsp;</p>
 
 
-		<br>
-		<br><p style="color:red">/// if (not added to a sprint yet)</p>
-		<button type="button" class="btn btn-primary">Add this task to current sprint</button>
-		<br><br><p style="color:red">/// if (in ToDo)</p>
-		<button type="button" class="btn btn-primary">Sign up for this task <span class="glyphicon glyphicon-check" aria-hidden="true"></span></button>
-		<br><br><p style="color:red">/// if (in Progress)</p>
-		<button type="button" class="btn btn-primary">Send to review <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-		<br><br> <p style="color:red">/// if (in Review)</p>
-		<button type="button" class="btn btn-primary">Send to finished <span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary">Move to previous Sprint</button>
+            <button type="button" class="btn btn-primary">Move to next Sprint <span
+                    class="glyphicon glyphicon-arrow-rechts" aria-hidden="true"> </span></button>
+        </div>
+        <br>
+
 		
 	</div>
     

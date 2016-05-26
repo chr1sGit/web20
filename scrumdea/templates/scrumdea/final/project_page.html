@@ -49,8 +49,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -101,7 +101,9 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sprints <b class="caret"></b></a>
             <ul class="dropdown-menu">
                 {% for sprint in sprints %}
-                    <li><a href="#sprint-{{ sprint.object.id }}" data-toggle="tab">{{ sprint.object.name }}</a></li>
+                    <li>
+                        <a href="{% url "sprint_detail_view" pk=sprint.object.project.id spk=sprint.object.id %}">{{ sprint.object.name }}</a>
+                    </li>
                 {% endfor %}
                 <li><a href="{% url "sprint_create_view" pk=object.id %}"><span class="glyphicon glyphicon-plus"
                                                                                 aria-hidden="true"></span> Add
@@ -115,14 +117,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-9">
-                    <h3>{{ object.name }}</h3>
-                    <p>{{ object.description }}</p>
 
-                    <div class="btn-group pull-right">
+                    <div class="btn-group pull-right" style="margin-top: 24px;">
                         <a href="{% url "project_edit_view" pk=object.id %}" type="button"
                            class="btn btn-primary">Edit</a>
                         <a href="{% url "project_delete_view" pk=object.id %}" type="button" class="btn btn-danger">Delete</a>
                     </div>
+                    <h3>{{ object.name }}</h3>
+                    <p>{{ object.description }}</p>
+
                 </div>
 
                 <div class="col-sm-3">
@@ -153,7 +156,7 @@
                         <div class="container-fluid">
                             <div class="btn-group button-pos-right">
                                 <button type="button" class="btn btn-success">{{ idea.votes }}</button>
-                                <button type="button" class="btn btn-danger">4</button>
+                                <button type="button" class="btn btn-danger">0</button>
                             </div>
                         </div>
                     </a>

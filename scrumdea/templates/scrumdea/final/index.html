@@ -47,8 +47,8 @@
              style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li><a href="{% url "project_list_view" %}">My Projects</a></li>
-                <li><a href="{% url "general_idea_list_view" %}">Project Ideas</a></li>
-                <li><a href="{% url "project_list_view" %}">Running Projects</a></li>
+                <li><a href="{% url "general_idea_listlist_view" %}">Project Ideas</a></li>
+                <li><a href="{% url "project_running_list_view" %}">Running Projects</a></li>
             </ul>
         </div>
 
@@ -116,7 +116,7 @@
 
                         <div class="list-group">
 
-                            {% for project in projects %}
+                            {% for project in projects|slice:":4" %}
                                 <a href="{% url "project_detail_view" pk=project.id %}" class="list-group-item">
                                     <h3>{{ project.name }}</h3>
                                     <p> {{ project.description }}</p>
@@ -163,7 +163,7 @@
 
                                             <button href="{% url "general_idea_vote_view" pk=idea.id %}" type="submit"
                                                     class="btn btn-success btn">{{ idea.votes }}</button>
-                                            <button type="button" class="btn btn-danger">4</button>
+                                            <button type="button" class="btn btn-danger">0</button>
                                         </div>
                                     </div>
                                 </a>
