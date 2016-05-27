@@ -28,6 +28,8 @@ urlpatterns = [
         name='in_project_create_task_view'),
     url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/$', views.InProjectIdeaDetailView.as_view(),
         name='in_project_idea_detail_view'),
+    url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/vote$', views.VoteViewInProjectIdea.as_view(),
+        name='in_project_idea_vote_view'),
     url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/delete$', views.InProjectIdeaDeleteView.as_view(),
         name='in_project_idea_delete_view'),
     url(r'^projects/(?P<pk>\d+)/task-idea/(?P<ipk>\d+)/edit$', views.InProjectIdeaEditView.as_view(),

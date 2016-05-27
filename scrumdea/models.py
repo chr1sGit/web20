@@ -54,6 +54,9 @@ class InProjectIdea(models.Model):
     transfered_to_sprint = models.BooleanField(default=False)
     votes = models.IntegerField(default=0)
 
+    class Meta:
+        ordering = ['votes']
+
 
 class GeneralIdea(models.Model):
     title = models.CharField(max_length=200)
