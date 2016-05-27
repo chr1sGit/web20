@@ -70,7 +70,7 @@ class GeneralIdeaDetailView(LoginRequiredMixin, DetailView):
 class GeneralIdeaCreateView(LoginRequiredMixin, CreateView):
     model = src_models.GeneralIdea
     fields = ['title', 'description']
-    template_name = "scrumdea/general-idea/generalidea-create.html"
+    template_name = "scrumdea/final/add_generalIdea.html"
 
     def get_success_url(self):
         return reverse('general_idea_detail_view', args=(self.object.id,))
@@ -90,7 +90,7 @@ class GeneralIdeaCreateView(LoginRequiredMixin, CreateView):
 class GeneralIdeaUpdateView(LoginRequiredMixin, UpdateView):
     model = src_models.GeneralIdea
     fields = ['title', 'description']
-    template_name = "scrumdea/general-idea/generalidea-update.html"
+    template_name = "scrumdea/final/edit_generlIdea.html"
 
     def get_success_url(self):
         return reverse('general_idea_detail_view', args=(self.object.id,))
@@ -109,10 +109,10 @@ class GeneralIdeaUpdateView(LoginRequiredMixin, UpdateView):
 
 class GeneralIdeaDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.GeneralIdea
-    template_name = "scrumdea/general-idea/generalidea-delete.html"
+    template_name = "scrumdea/final/delete_generalidea.html"
 
     def get_success_url(self):
-        return reverse('general_idea_list_view')
+        return reverse('general_idea_listlist_view')
 
 
 # InProjectIdea
@@ -147,7 +147,7 @@ class InProjectIdeaDetailView(LoginRequiredMixin, DetailView):
 
 class InProjectIdeaDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Sprint
-    template_name = "scrumdea/task/task-delete.html"
+    template_name = "scrumdea/final/delete_task_idea.html"
 
     def get_object(self, queryset=None):
         return src_models.InProjectIdea.objects.get(id=self.kwargs['ipk'])
@@ -182,6 +182,8 @@ class InProjectIdeaEditView(LoginRequiredMixin, UpdateView):
 
 
 class InProjectIdeaCreateTaskView(LoginRequiredMixin, RedirectView):
+    model = src_models.Task
+
     def get_redirect_url(self, *args, **kwargs):
         task_idea = src_models.InProjectIdea.objects.get(id=kwargs['ipk'])
         sprint_count = src_models.Sprint.objects.filter(project=kwargs['pk']).count()
@@ -190,7 +192,6 @@ class InProjectIdeaCreateTaskView(LoginRequiredMixin, RedirectView):
 
         new_task = src_models.Task()
         new_task.sprint = current_sprint
-        new_task.phase = "todo"
         new_task.name = task_idea.title
         new_task.description = task_idea.description
         new_task.assignedUser = self.request.user

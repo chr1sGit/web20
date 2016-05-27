@@ -1,10 +1,14 @@
-{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UaA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SCRUMdea - Delete</title>
     <!-- Bootstrap -->
@@ -89,8 +93,8 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1>Delete Task Idea</h1>
-        <p>Are you sure deleting this idea?</p>
+        <h1>Delete Project Idea</h1>
+        <p>Do you really want to delete this idea?</p>
     </div>
 </div>
 
@@ -98,11 +102,10 @@
 <div class="container">
 
     <form action="" method="post">{% csrf_token %}
-    <h2>Task: <strong>{{ object.title }}</strong></h2>
+    <h2>Project: <strong>{{ object.title }}</strong></h2>
     <p>Created on {{ object.creation_date }}</p>
     <h3>Description:</h3>
         <p style="margin-bottom: 30px;">{{ object.description }}</p>
-        <p style="margin-bottom: 30px;"></p>
     <input type="submit" value="Delete idea" class="btn btn-danger"/>
 </form>
 </div>

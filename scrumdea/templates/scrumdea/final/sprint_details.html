@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <!-- Bootstrap TabCollapse-->
-    <script type="text/javascript" src="{% static "/js/bootstrap-tabcollapse.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap-tabcollapse.js" %}"></script>
 
     <link rel="stylesheet" href="{% static "style.css" %}">
 
@@ -105,7 +105,7 @@
                         <a href="{% url "sprint_detail_view" pk=object.project.id spk=sprint.id %}">{{ sprint.name }}</a>
                     </li>
                 {% endfor %}
-                <li><a href="{% url "sprint_create_view" pk=object.id %}"><span class="glyphicon glyphicon-plus"
+                <li><a href="{% url "sprint_create_view" pk=object.project.id %}"><span class="glyphicon glyphicon-plus"
                                                                                 aria-hidden="true"></span> Add
                     sprint</a></li>
             </ul>
@@ -122,6 +122,7 @@
 
 </div>
 <div id="myTabContent" class="tab-content">
+    <div class="" id="sprint1">
     {% for sprint in sprints %}
         <div class="container-fluid">
 
@@ -246,6 +247,7 @@
             </div>
 
 
+        </div>
         </div>
         </div>
     {% endfor %}

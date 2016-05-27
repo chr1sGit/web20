@@ -40,8 +40,8 @@ class Task(models.Model):
     )
     phase = models.CharField(max_length=4,
                              choices=PHASE,
-                             default='Idea')
-    name = models.CharField(max_length=300, default='no name')
+                             default='Todo')
+    name = models.CharField(max_length=300, default='Task')
     description = models.TextField()
     assignedUser = models.ForeignKey(User, related_name='tasks', verbose_name='User')
 
