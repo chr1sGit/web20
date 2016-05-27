@@ -81,7 +81,12 @@
     </div>
 </div>
 
-
+{% if messages %}
+    {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}</div>
+    {% endfor %}
+{% endif %}
 <div class="jumbotron">
     <div class="container">
         <h1>{{ object.title }}</h1>
@@ -110,7 +115,7 @@
     <br>
     <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Vote for this idea</button>
+        <a href="{% url "in_project_idea_vote_view" pk=object.project.id ipk=object.id %}" type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Vote for this idea</a>
         <a href="{% url "in_project_create_task_view" pk=object.project.id ipk=object.id %}" type="button" class="btn btn-primary">Add this idea as task to current sprint</a>
     </div>
 

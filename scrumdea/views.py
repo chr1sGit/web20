@@ -144,6 +144,10 @@ class InProjectIdeaDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         return src_models.InProjectIdea.objects.get(id=self.kwargs['ipk'])
 
+    def dispatch(self, request, *args, **kwargs):
+        update_vote_count_in_project_idea()
+        return super(InProjectIdeaDetailView, self).dispatch(request, *args, **kwargs)
+
 
 class InProjectIdeaDeleteView(LoginRequiredMixin, DeleteView):
     model = src_models.Sprint
@@ -199,7 +203,8 @@ class InProjectIdeaCreateTaskView(LoginRequiredMixin, RedirectView):
 
         task_idea.delete()
 
-        messages.success(self.request, "<b>Successfully</b> added idea to tasks! :)", extra_tags='alert alert-success safe')
+        messages.success(self.request, "<b>Successfully</b> added idea to tasks! :)",
+                         extra_tags='alert alert-success safe')
         return reverse('project_detail_view', kwargs={'pk': self.kwargs['pk']})
 
 
@@ -236,6 +241,10 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         context['idea_list'] = src_models.InProjectIdea.objects.filter(project=self.kwargs['pk']).order_by('-votes')
         context['newest_sprint_id'] = (src_models.Sprint.objects.filter(project=self.kwargs['pk']))[0].id
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        update_vote_count_in_project_idea()
+        return super(ProjectDetailView, self).dispatch(request, *args, **kwargs)
 
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -648,11 +657,46 @@ class VoteViewGeneralIdea(View):
             return HttpResponseRedirect(self.get_redirect_url())
 
 
+class VoteViewInProjectIdea(View):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('in_project_idea_detail_view', kwargs={'pk': self.kwargs['pk'], 'ipk': self.kwargs['ipk']})
+
+    def get(self, request, *args, **kwargs):
+
+        user = self.request.user
+        general_idea = None
+        in_project_idea = src_models.InProjectIdea.objects.get(id=kwargs["ipk"])
+
+        vote, created = src_models.Vote.objects.get_or_create(
+            user=user,
+            generalIdea=general_idea,
+            inProjectIdea=in_project_idea
+        )
+
+        if not created:
+            messages.error(self.request, "You have already voted for this Idea. Sorry.",
+                           extra_tags='alert alert-danger safe')
+            return HttpResponseRedirect(self.get_redirect_url())
+        else:
+            messages.success(self.request, "Awesome, thanks for voting!",
+                             extra_tags='alert alert-success safe')
+            update_vote_count_in_project_idea()
+            return HttpResponseRedirect(self.get_redirect_url())
+
+
 # Updates all votes of general ideas
 def update_vote_count_general_idea():
     all_ideas = src_models.GeneralIdea.objects.all()
     for idea in all_ideas:
         vote_count = (src_models.Vote.objects.filter(generalIdea=idea.id, inProjectIdea__isnull=True)).count();
+        idea.votes = vote_count
+        idea.save()
+
+
+def update_vote_count_in_project_idea():
+    all_ideas = src_models.InProjectIdea.objects.all()
+    for idea in all_ideas:
+        vote_count = (src_models.Vote.objects.filter(inProjectIdea=idea.id, generalIdea__isnull=True)).count();
         idea.votes = vote_count
         idea.save()
 
