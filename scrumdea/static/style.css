@@ -12,6 +12,20 @@ html{  background-color: #eaf0f2; height: 100%; }
 body{  font:14px/1.5 Arial, Helvetica, sans-serif;
 }
 
+label
+{
+	width: 100%;
+}
+
+input
+{
+	width: 400px;
+}
+textarea
+{
+	width: 400px;
+}
+
 /* arrow buttons to switch between scrumboards */
 
 .scrumboard-button{
