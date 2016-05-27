@@ -3,11 +3,6 @@ from django.db import models
 from django.utils import timezone
 
 
-# class UserProfile(models.Model):
-#    user = models.OneToOneField(User)
-# not finished yet (needed to
-
-
 class Project(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
