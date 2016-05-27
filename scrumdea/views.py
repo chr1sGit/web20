@@ -335,7 +335,7 @@ class SprintAutoCreateView(LoginRequiredMixin, RedirectView):
         sprint.project = src_models.Project.objects.get(id=kwargs['pk'])
         sprint.save()
         messages.success(self.request, "<b>Success!</b> New Sprint created! :)", extra_tags='alert alert-success safe')
-        return reverse('project_detail_view', kwargs={'pk': self.kwargs['pk']})
+        return reverse('sprint_detail_view', kwargs={'pk': self.kwargs['pk'], 'spk': sprint.id})
 
 
 class SprintDetailView(LoginRequiredMixin, DetailView):
