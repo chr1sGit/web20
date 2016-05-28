@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     # General idea
     url(r'^$', views.GeneralIdeaListView.as_view(), name='general_idea_list_view'),
+    url(r'^accounts/profile/$', views.GeneralIdeaListView.as_view(), name='general_idea_list_view'),
     url(r'^ideas/$', views.GeneralIdeaListListView.as_view(), name='general_idea_listlist_view'),
     url(r'^general-ideas/(?P<pk>\d+)/$', login_required(views.GeneralIdeaDetailView.as_view()),
         name='general_idea_detail_view'),
