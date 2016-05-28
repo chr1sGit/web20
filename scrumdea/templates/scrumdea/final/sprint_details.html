@@ -350,6 +350,9 @@
         if ($(window).width() <= smallScreenWidth) {
             showOnlySelectedScrumElement();
         }
+		else{
+			showAllScrumElements();
+		}
 
         $(window).resize(function () {
             if (!adjustedToSmallDisplay && $(window).width() <= smallScreenWidth) {
