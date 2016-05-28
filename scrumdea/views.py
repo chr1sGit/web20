@@ -536,7 +536,7 @@ class TaskMoveRight(LoginRequiredMixin, RedirectView):
 class LoginView(FormView):
     form_class = AuthenticationForm
     redirect_field_name = REDIRECT_FIELD_NAME
-    template_name = 'scrumdea/authentication/login.html'
+    template_name = 'scrumdea/final/login.html'
 
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
@@ -594,7 +594,7 @@ class LoginView(FormView):
 
 
 class LogoutView(TemplateResponseMixin, View):
-    template_name = "scrumdea/authentication/logout.html"
+    template_name = "scrumdea/final/logout.html"
     redirect_field_name = "next"
 
     def get(self, *args, **kwargs):
